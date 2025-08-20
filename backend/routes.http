@@ -1,0 +1,35 @@
+# Criar um usuário (POST)
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "email": "pedero@test.com",
+    "name": "pedero",
+    "password": "1234",
+    "phone" : null,
+    "gender": "male",
+    "birthday": "2024-06-12T10:00:00.000Z"
+}
+
+###
+
+# Listar todos os usuários (GET)
+GET http://localhost:3000/user
+
+###
+
+# Atualizar usuário com id 1 (PUT)
+PUT http://localhost:3000/user/1
+Content-Type: application/json
+
+{
+    "password": "1234",
+    "phone" : null,
+    "gender": "male",
+    "birthday": "2024-01-11T10:00:00.000Z"
+}
+
+###
+
+# Deletar usuário com id 1 (DELETE)
+DELETE http://localhost:3000/user/2

@@ -3,7 +3,9 @@ import {
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
+    OneToMany,
 } from "typeorm";
+import { Task } from "./Task";
 
 @Entity("users")
 export class User {
@@ -33,6 +35,11 @@ export class User {
 
     @Column()
     birthday: Date;
+
+
+    @OneToMany(() => Task, task => task.user)
+    tasks?: Task[];
+
 
     constructor(
         name: string,

@@ -13,7 +13,7 @@ export class Group {
     days: number[];
 
     constructor(days: number[],tasks: Task[]) {
-        this.tasks = tasks ?? []
+        this.tasks = tasks
         this.days = days ?? [0,1,2,3,4,5,6]
     }
 }

@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
-import { Group } from "./Groups";
+import { Group } from "./Group";
 
 @Entity("tasks") 
 export class Task{
@@ -11,7 +11,7 @@ export class Task{
     user: User;
 
     @ManyToOne(() => Group, group => group.tasks)
-    group: Group
+    group: Group;
 
     constructor(user: User, group: Group) {
         this.user = user

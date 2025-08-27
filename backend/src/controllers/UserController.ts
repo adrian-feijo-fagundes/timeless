@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { UserRepository } from "../repositories/UserRepository";
 import { RestController } from "./RestController";
+import bcrypt from "bcryptjs/umd/types";
 
 
 const userRepository = new UserRepository()
@@ -49,5 +50,39 @@ export class UserController implements RestController {
         await userRepository.delete(id)
 
         return res.status(204).send()
+    }
+
+    async login(req: Request, res: Response): Promise<Response> {
+        try {
+            // Extraímos o email e a senha do corpo da requisição (body)
+            const { email, password } = req.body;
+
+            // Verificamos se o email e a senha foram enviados na requisição
+            if(!email || !password) {
+                return res.status(400).json({ message: "Email e senha são obrigatórios!" });
+            }
+
+            // Buscamos no banco de dados um usuário com o email fornecido
+            const user = await userRepository.findByEmail(email);
+
+            // Se não encontrar o usuário, retorna erro 404 (não encontrado)
+            if (!user) return res.status(404).json({ message: "Usuário não encontrado." });
+
+            // Comparando a senha enviada com a senha criptografada salva no banco
+            const isValid = await bcrypt.compare(password, user.password);
+
+            // Se a senha não for válida, retorna erro 401 (não autorizado)
+            if (!isValid) return res.status(401).json({ message: "Senha inválida." });
+
+            // Se tudo estiver certo, retorna uma resposta de sucesso
+            return res.json({ message: "Login autorizado" });
+
+        } catch (error) {
+            // Caso ocorra algum erro inesperado, capturamos e registramos no console
+            console.error('Erro ao fazer login!', error);
+
+            // Retornamos um erro 500 (erro interno do servidor)
+            return res.status(500).json({ message: "Erro ao fazer login" });
+        }
     }
 }

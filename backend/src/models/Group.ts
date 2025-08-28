@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Task } from "./Task";
+import { User } from "./User";
 
 @Entity("groups") 
 export class Group {
@@ -8,6 +9,9 @@ export class Group {
 
     @OneToMany(() => Task, task => task.group)
     tasks: Task[];
+
+    @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE"})
+    user?: User;
 
     @Column("json")
     days: number[];

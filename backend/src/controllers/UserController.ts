@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { UserRepository } from "../repositories/UserRepository";
 import { RestController } from "./RestController";
-import bcrypt from "bcryptjs/umd/types";
+import bcrypt from "bcryptjs";
 
 
 const userRepository = new UserRepository()

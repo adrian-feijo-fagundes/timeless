@@ -8,7 +8,7 @@ Aqui está um **guia passo a passo** para o `CONTRIBUTING.md`, organizado a part
 
 ### 0) Padrões que seguimos
 
-* **Branch base:** `dev`
+* **Branch base:** `main`
 * **Commits:** **Conventional Commits** (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:` …)
 * **Nome de branch:** use prefixos e *kebab-case*, **sem espaços** e **sem dois-pontos**.
   Exemplos: `feat/tela-login`, `fix/validacao-email`, `docs/guia-contribuicao`
@@ -17,17 +17,17 @@ Aqui está um **guia passo a passo** para o `CONTRIBUTING.md`, organizado a part
 
 ### 1) Atualize sua cópia local antes de começar
 
-Sempre trabalhe a partir da branch `dev` **atualizada**.
+Sempre trabalhe a partir da branch `main` **atualizada**.
 
 ```bash
 # Pegue as refs mais recentes do remoto
 git fetch --all --prune
 
 # Vá para a branch base
-git checkout dev
+git checkout main
 
 # Traga as mudanças remotas mantendo histórico limpo
-git pull --rebase origin dev
+git pull --rebase origin main
 ```
 
 > Dica: use `--rebase` para evitar merges desnecessários no histórico.
@@ -36,12 +36,12 @@ git pull --rebase origin dev
 
 ### 2) Crie uma nova branch para sua alteração
 
-Crie a partir de `dev`. Exemplos de nomes:
+Crie a partir de `main`. Exemplos de nomes:
 
 * **Feature (ex.: tela de login):**
 
 ```bash
-git checkout dev
+git checkout main
 git switch -c feat/tela-login
 # ou: git checkout -b feat/tela-login
 ```
@@ -78,12 +78,12 @@ git commit -m "docs(contributing): incluir passo a passo de branches"
 
 ### 4) Mantenha sua branch atualizada durante o trabalho
 
-Regularmente, rebaseie com `dev` para evitar conflitos no fim.
+Regularmente, rebaseie com `main` para evitar conflitos no fim.
 
 ```bash
 # Estando na sua branch (ex.: feat/tela-login):
 git fetch origin
-git rebase origin/dev
+git rebase origin/main
 # Se houver conflitos: resolva-os nos arquivos, depois:
 git add <arquivos-resolvidos>
 git rebase --continue
@@ -93,7 +93,7 @@ git rebase --continue
 
 ```bash
 git stash
-git pull --rebase origin dev
+git pull --rebase origin main
 git stash pop
 ```
 
@@ -109,7 +109,7 @@ git push -u origin feat/tela-login
 
 ### 6) Abra um Pull Request (PR)
 
-* **Base:** `dev`
+* **Base:** `main`
 * **Título:** siga Conventional Commits (ex.: `feat(login): criar tela de login`)
 * **Descrição:** explique o que mudou, por quê e como testar.
 * **Referencie issues:** `Closes #123` (se houver).
@@ -145,8 +145,8 @@ Após aprovado e integrado:
 
 ```bash
 # Volte para a base e atualize
-git checkout dev
-git pull --rebase origin dev
+git checkout main
+git pull --rebase origin main
 
 # Remova a branch local
 git branch -d feat/tela-login
@@ -162,7 +162,7 @@ git push origin --delete feat/tela-login
 ### 10) Problemas comuns
 
 * **Conflitos frequentes?** Rebaseie cedo e com frequência.
-* **Arquivos indevidos no commit?**
+* **Arquivos inmainidos no commit?**
   Ajuste `.gitignore` e use `git restore --staged <arquivo>`.
 * **Rebase complicado?** Você pode abortar: `git rebase --abort` e pedir ajuda no PR.
 

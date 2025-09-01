@@ -11,13 +11,14 @@ export class Group {
     tasks: Task[];
 
     @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE"})
-    user?: User;
+    user: User;
 
     @Column("json")
     days: number[];
 
-    constructor(days: number[],tasks: Task[]) {
+    constructor(days: number[],tasks: Task[], user: User) {
         this.tasks = tasks
+        this.user = user
         this.days = days ?? [0,1,2,3,4,5,6]
     }
 }

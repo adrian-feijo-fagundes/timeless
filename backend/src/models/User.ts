@@ -11,7 +11,6 @@ import {
 } from "typeorm";
 import { Task } from "./Task";
 import { Group } from "./Group";
-import { Appointment } from "./Appointment";
 
 @Entity("users")
 export class User {
@@ -48,10 +47,6 @@ export class User {
 
     @OneToMany(() => Group, group => group.user)
     groups?: Group[];
-
-
-    @OneToMany(() => Appointment, appointment => appointment.user)
-    appointments?: Appointment[];
 
     private previousPassword!: string;
 

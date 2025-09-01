@@ -2,6 +2,20 @@ import { User } from "../models/User";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../config/dataSource";
 
+// Interface para resposta do usuário (sem senha e métodos)
+export interface UserResponse {
+    id: number;
+    email: string;
+    name: string;
+    phone: string | null;
+    gender: string;
+    createdAt: Date;
+    birthday: Date;
+    tasks?: any[];
+    groups?: any[];
+    tasksLog?: any[];
+}
+
 export class UserRepository {
     private repository: Repository<User>;
 
@@ -9,23 +23,28 @@ export class UserRepository {
         this.repository = AppDataSource.getRepository(User);
     }
 
-    async create(data: User): Promise<User> {
-        const user = this.repository.create(data); // cria a instância, mas não salva
-        const savedUser = await this.repository.save(user); // salva no banco
-        return savedUser;
+    /**
+     * Remove a senha do objeto usuário
+     */
+    private removePassword(user: User): UserResponse {
+        const { password, hashPassword, ...userResponse } = user;
+        return userResponse as UserResponse;
     }
 
-    async findAll(): Promise<User[]> {
-        return this.repository.find({
-            // select: ["id", "name", "email"] // seleciona apenas campos necessários
-        });
+    async create(data: User): Promise<UserResponse> {
+        const user = this.repository.create(data);
+        const savedUser = await this.repository.save(user);
+        return this.removePassword(savedUser);
     }
 
-    async findById(id: number): Promise<User | null> {
-        return this.repository.findOne({
-            where: { id },
-            // select: ["id", "name", "email"]
-        });
+    async findAll(): Promise<UserResponse[]> {
+        const users = await this.repository.find();
+        return users.map(user => this.removePassword(user));
+    }
+
+    async findById(id: number): Promise<UserResponse | null> {
+        const user = await this.repository.findOne({ where: { id } });
+        return user ? this.removePassword(user) : null;
     }
 
     async update(id: number, data: User): Promise<void> {
@@ -36,7 +55,8 @@ export class UserRepository {
         await this.repository.delete(id);
     }
 
-    async findByEmail(email: string) {
+    // Método para autenticação (retorna com senha)
+    async findByEmail(email: string): Promise<User | null> {
         return this.repository.findOneBy({ email });
     }
 }

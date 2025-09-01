@@ -17,7 +17,7 @@ export class Task{
     status: string;
 
     @Column()
-    frequent: boolean;
+    isHabit: boolean;
 
     @Column({ nullable: true})
     limitDate: Date | null;
@@ -34,7 +34,7 @@ export class Task{
         title: string,
         topic: string,
         status: string,
-        frequent: boolean,
+        isHabit: boolean,
         limitDate: Date,
     ) {
         this.user = user
@@ -42,7 +42,7 @@ export class Task{
         this.title = title
         this.topic = topic
         this.status = status
-        this.frequent = frequent
+        this.isHabit = isHabit
         this.limitDate = limitDate
     }
 }

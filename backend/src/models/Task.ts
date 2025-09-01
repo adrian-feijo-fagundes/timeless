@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 import { Group } from "./Group";
+import { TaskLog } from "./TaskLog";
 
 @Entity("tasks") 
 export class Task{
@@ -27,6 +28,9 @@ export class Task{
 
     @ManyToOne(() => Group, group => group.tasks)
     group: Group;
+
+    @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
+    tasksLog?: TaskLog[];
     
     constructor(
         user: User, 
@@ -36,6 +40,7 @@ export class Task{
         status: string,
         isHabit: boolean,
         limitDate: Date,
+        tasksLog: TaskLog[]
     ) {
         this.user = user
         this.group = group
@@ -44,5 +49,6 @@ export class Task{
         this.status = status
         this.isHabit = isHabit
         this.limitDate = limitDate
+        this.tasksLog = tasksLog
     }
 }

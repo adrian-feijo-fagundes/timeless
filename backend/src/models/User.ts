@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Task } from "./Task";
 import { Group } from "./Group";
+import { TaskLog } from "./TaskLog";
 
 @Entity("users")
 export class User {
@@ -48,6 +49,10 @@ export class User {
     @OneToMany(() => Group, group => group.user)
     groups?: Group[];
 
+
+    @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
+    tasksLog?: TaskLog[];
+
     private previousPassword!: string;
 
     @BeforeInsert() // Antes de inserir um novo usuário
@@ -73,7 +78,9 @@ export class User {
         password: string,
         birthday: Date,
         phone: string,
-        gender: string
+        gender: string,
+        tasksLog: TaskLog[]
+
     ) {
         this.name = name;
         this.email = email;
@@ -81,5 +88,6 @@ export class User {
         this.phone = phone ?? null;
         this.gender = gender ?? 'preferNotToSay';
         this.birthday = birthday;
+        this.tasksLog = tasksLog
     }
 }

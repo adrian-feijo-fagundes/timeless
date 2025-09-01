@@ -1,4 +1,4 @@
-import { Entity, ManyToOne } from "typeorm";
+import { CreateDateColumn, Entity, ManyToOne } from "typeorm";
 import { Task } from "./Task";
 import { User } from "./User";
 
@@ -11,6 +11,9 @@ export class TaskLog {
     @ManyToOne(() => Task, task => task.tasksLog)
     task: Task;
 
+    @CreateDateColumn()
+    createdAt!: Date;
+        
     constructor(
         user: User,
         task: Task

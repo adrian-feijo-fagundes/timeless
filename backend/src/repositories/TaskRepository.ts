@@ -16,21 +16,48 @@ export class TaskRepository {
      * Adiciona um registro no TaskLog
      */
     private async addTaskLog(task: Task, user: any, message: string): Promise<void> {
-        const taskLog = this.taskLogRepository.create({
-            task,
-            user,
-            message
-        });
+        const taskLog = this.taskLogRepository.create({ task, user, message });
         await this.taskLogRepository.save(taskLog);
     }
+
+    /**
+     * Busca tarefa com validação
+     */
+    private async findTaskWithValidation(id: number): Promise<Task | null> {
+        return await this.repository.findOne({
+            where: { id },
+            relations: ['user', 'group', 'tasksLog']
+        });
+    }
+
+    /**
+     * Atualiza tarefa com log automático
+     */
+    private async updateWithLog(id: number, data: Partial<Task>, user: any, logMessage: string): Promise<void> {
+        const task = await this.findTaskWithValidation(id);
+        if (!task) return;
+
+        await this.repository.update(id, data);
+        await this.addTaskLog(task, user, logMessage);
+    }
+
+    /**
+     * Busca tarefas com filtros
+     */
+    private async findTasksWithFilters(filters: any, relations: string[] = ['group', 'tasksLog']): Promise<Task[]> {
+        return await this.repository.find({
+            where: filters,
+            relations,
+            order: { createdAt: 'DESC' }
+        });
+    }
+
+    // ========== MÉTODOS PÚBLICOS ==========
 
     async create(data: Task): Promise<Task> {
         const task = this.repository.create(data);
         const savedTask = await this.repository.save(task);
-        
-        // Adicionar log de criação
         await this.addTaskLog(savedTask, data.user, "Criada");
-        
         return savedTask;
     }
 
@@ -41,68 +68,94 @@ export class TaskRepository {
     }
 
     async findById(id: number): Promise<Task | null> {
-        return await this.repository.findOne({
-            where: { id },
-            relations: ['user', 'group', 'tasksLog']
-        });
+        return await this.findTaskWithValidation(id);
     }
 
     async findByUserId(userId: number): Promise<Task[]> {
-        return await this.repository.find({
-            where: { user: { id: userId } },
-            relations: ['group', 'tasksLog'],
-            order: { createdAt: 'DESC' }
-        });
+        return await this.findTasksWithFilters({ user: { id: userId } });
     }
 
     async findByGroupId(groupId: number): Promise<Task[]> {
-        return await this.repository.find({
-            where: { group: { id: groupId } },
-            relations: ['user', 'tasksLog'],
-            order: { createdAt: 'DESC' }
-        });
+        return await this.findTasksWithFilters({ group: { id: groupId } }, ['user', 'tasksLog']);
     }
 
     async findByStatus(status: string, userId: number): Promise<Task[]> {
-        return await this.repository.find({
-            where: { 
-                status,
-                user: { id: userId }
-            },
-            relations: ['group', 'tasksLog'],
-            order: { createdAt: 'DESC' }
+        return await this.findTasksWithFilters({ 
+            status,
+            user: { id: userId }
         });
     }
 
     async findHabits(userId: number): Promise<Task[]> {
-        return await this.repository.find({
-            where: { 
-                isHabit: true,
-                user: { id: userId }
-            },
-            relations: ['group', 'tasksLog'],
-            order: { createdAt: 'DESC' }
+        return await this.findTasksWithFilters({ 
+            isHabit: true,
+            user: { id: userId }
         });
     }
 
     async findTasks(userId: number): Promise<Task[]> {
-        return await this.repository.find({
-            where: { 
-                isHabit: false,
-                user: { id: userId }
-            },
-            relations: ['group', 'tasksLog'],
-            order: { createdAt: 'DESC' }
+        return await this.findTasksWithFilters({ 
+            isHabit: false,
+            user: { id: userId }
         });
     }
 
     async update(id: number, data: Partial<Task>, user: any): Promise<void> {
-        const task = await this.findById(id);
+        const task = await this.findTaskWithValidation(id);
         if (!task) return;
 
-        // Verificar quais campos foram alterados e criar mensagens simples
+        // Detectar mudanças e criar logs
+        const changes = this.detectChanges(task, data);
+        
+        await this.repository.update(id, data);
+
+        // Adicionar logs para cada mudança
+        if (changes.length > 0) {
+            for (const change of changes) {
+                await this.addTaskLog(task, user, change);
+            }
+        } else {
+            await this.addTaskLog(task, user, "Atualizada");
+        }
+    }
+
+    async delete(id: number, user: any): Promise<void> {
+        const task = await this.findTaskWithValidation(id);
+        if (!task) return;
+
+        await this.addTaskLog(task, user, "Excluída");
+        await this.repository.delete(id);
+    }
+
+    async complete(id: number, user: any): Promise<void> {
+        await this.updateWithLog(id, { 
+            status: 'concluída',
+            completedAt: new Date()
+        }, user, "Concluída");
+    }
+
+    async reschedule(id: number, newDate: Date, user: any): Promise<void> {
+        await this.updateWithLog(id, { 
+            limitDate: newDate,
+            status: 'agendada'
+        }, user, "Reagendada");
+    }
+
+    async start(id: number, user: any): Promise<void> {
+        await this.updateWithLog(id, { status: 'em_andamento' }, user, "Iniciada");
+    }
+
+    async pause(id: number, user: any): Promise<void> {
+        await this.updateWithLog(id, { status: 'pendente' }, user, "Pausada");
+    }
+
+    /**
+     * Detecta mudanças entre o objeto atual e os novos dados
+     */
+    private detectChanges(task: Task, data: Partial<Task>): string[] {
         const changes: string[] = [];
         
+        // Verificar mudanças específicas
         if (data.title && data.title !== task.title) {
             changes.push("Título alterado");
         }
@@ -123,77 +176,7 @@ export class TaskRepository {
             changes.push(data.isHabit ? "Tipo: Hábito" : "Tipo: Tarefa");
         }
 
-        // Atualizar a tarefa
-        await this.repository.update(id, data);
-
-        // Adicionar logs para cada mudança
-        if (changes.length > 0) {
-            for (const change of changes) {
-                await this.addTaskLog(task, user, change);
-            }
-        } else {
-            await this.addTaskLog(task, user, "Atualizada");
-        }
-    }
-
-    async delete(id: number, user: any): Promise<void> {
-        const task = await this.findById(id);
-        if (!task) return;
-
-        // Adicionar log antes de deletar
-        await this.addTaskLog(task, user, "Excluída");
-        
-        await this.repository.delete(id);
-    }
-
-    async complete(id: number, user: any): Promise<void> {
-        const task = await this.findById(id);
-        if (!task) return;
-
-        await this.repository.update(id, { 
-            status: 'concluída',
-            completedAt: new Date()
-        });
-
-        // Adicionar log de conclusão
-        await this.addTaskLog(task, user, "Concluída");
-    }
-
-    async reschedule(id: number, newDate: Date, user: any): Promise<void> {
-        const task = await this.findById(id);
-        if (!task) return;
-
-        await this.repository.update(id, { 
-            limitDate: newDate,
-            status: 'agendada'
-        });
-
-        // Adicionar log de reagendamento
-        await this.addTaskLog(task, user, "Reagendada");
-    }
-
-    async start(id: number, user: any): Promise<void> {
-        const task = await this.findById(id);
-        if (!task) return;
-
-        await this.repository.update(id, { 
-            status: 'em_andamento'
-        });
-
-        // Adicionar log de início
-        await this.addTaskLog(task, user, "Iniciada");
-    }
-
-    async pause(id: number, user: any): Promise<void> {
-        const task = await this.findById(id);
-        if (!task) return;
-
-        await this.repository.update(id, { 
-            status: 'pendente'
-        });
-
-        // Adicionar log de pausa
-        await this.addTaskLog(task, user, "Pausada");
+        return changes;
     }
 
     async getStatsByUser(userId: number): Promise<{
@@ -214,16 +197,10 @@ export class TaskRepository {
         ).length;
         const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-        return {
-            total,
-            completed,
-            pending,
-            overdue,
-            completionRate
-        };
+        return { total, completed, pending, overdue, completionRate };
     }
 
-    // Método para buscar logs de uma tarefa específica
+    // Métodos para logs
     async getTaskLogs(taskId: number): Promise<TaskLog[]> {
         return await this.taskLogRepository.find({
             where: { task: { id: taskId } },
@@ -232,7 +209,6 @@ export class TaskRepository {
         });
     }
 
-    // Método para buscar logs de um usuário
     async getUserLogs(userId: number, limit?: number): Promise<TaskLog[]> {
         return await this.taskLogRepository.find({
             where: { user: { id: userId } },
@@ -242,7 +218,6 @@ export class TaskRepository {
         });
     }
 
-    // Método para buscar logs por período
     async getLogsByPeriod(userId: number, startDate: Date, endDate: Date): Promise<TaskLog[]> {
         return await this.taskLogRepository
             .createQueryBuilder('taskLog')

@@ -31,7 +31,7 @@ export class GroupRepository {
         return await this.repository.find({
             where: { user: { id: userId } },
             relations: ['tasks'],
-            order: { priority: 'DESC', createdAt: 'DESC' }
+            order: { createdAt: 'DESC' }
         });
     }
 

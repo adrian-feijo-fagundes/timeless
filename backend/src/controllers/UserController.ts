@@ -19,30 +19,27 @@ const MESSAGES = {
     EMAIL_ALREADY_EXISTS: "Email já está em uso"
 };
 
+const validateUserData = (data: any): { isValid: boolean; error?: string } => {
+    const { name, email, password, birthday } = data;
+    
+    if (!name || !email || !password || !birthday) {
+        return { isValid: false, error: MESSAGES.REQUIRED_FIELDS };
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return { isValid: false, error: MESSAGES.INVALID_EMAIL };
+    }
+    
+    return { isValid: true };
+};
 export class UserController implements RestController {
     
-    /**
-     * Valida dados básicos do usuário
-     */
-    private validateUserData(data: any): { isValid: boolean; error?: string } {
-        const { name, email, password, birthday } = data;
-        
-        if (!name || !email || !password || !birthday) {
-            return { isValid: false, error: MESSAGES.REQUIRED_FIELDS };
-        }
-        
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return { isValid: false, error: MESSAGES.INVALID_EMAIL };
-        }
-        
-        return { isValid: true };
-    }
 
     async create(req: Request, res: Response): Promise<Response> {
         try {
             // Validação dos dados
-            const validation = this.validateUserData(req.body);
+            const validation = validateUserData(req.body);
             if (!validation.isValid) {
                 return res.status(400).json({ message: validation.error });
             }

@@ -13,8 +13,12 @@ const MESSAGES = {
     REQUIRED_FIELDS: "Título, tópico e grupo são obrigatórios",
     INVALID_STATUS: "Status deve ser: pendente, em_andamento ou concluída",
     INVALID_DATE: "Data de vencimento inválida",
-    ACCESS_DENIED: "Acesso negado"
+    ACCESS_DENIED: "Acesso negado",
+    USER_NOT_AUTHENTICATED: "Usuário não autenticado"
 };
+
+// Validações
+const VALID_STATUSES = ['pendente', 'em_andamento', 'concluída'];
 
 export class TaskController implements RestController {
     
@@ -28,12 +32,10 @@ export class TaskController implements RestController {
             return { isValid: false, error: MESSAGES.REQUIRED_FIELDS };
         }
         
-        // Validar status se fornecido
-        if (data.status && !['pendente', 'em_andamento', 'concluída'].includes(data.status)) {
+        if (data.status && !VALID_STATUSES.includes(data.status)) {
             return { isValid: false, error: MESSAGES.INVALID_STATUS };
         }
         
-        // Validar data se fornecida
         if (data.limitDate && isNaN(new Date(data.limitDate).getTime())) {
             return { isValid: false, error: MESSAGES.INVALID_DATE };
         }
@@ -41,103 +43,140 @@ export class TaskController implements RestController {
         return { isValid: true };
     }
 
-    async create(req: Request, res: Response): Promise<Response> {
+    /**
+     * Valida ID e retorna erro se inválido
+     */
+    private validateId(id: string): { isValid: boolean; taskId?: number; error?: string } {
+        const taskId = Number(id);
+        if (isNaN(taskId)) {
+            return { isValid: false, error: MESSAGES.INVALID_ID };
+        }
+        return { isValid: true, taskId };
+    }
+
+    /**
+     * Verifica se o usuário está autenticado
+     */
+    private checkAuthentication(req: Request): { isValid: boolean; userId?: number; error?: string } {
+        const userId = req.user?.id;
+        if (!userId) {
+            return { isValid: false, error: MESSAGES.USER_NOT_AUTHENTICATED };
+        }
+        return { isValid: true, userId };
+    }
+
+    /**
+     * Verifica se a tarefa existe e pertence ao usuário
+     */
+    private async checkTaskOwnership(taskId: number, userId: number): Promise<{ task: Task | null; error?: string }> {
+        const task = await taskRepository.findById(taskId);
+        if (!task) {
+            return { task: null, error: MESSAGES.TASK_NOT_FOUND };
+        }
+        if (task.user.id !== userId) {
+            return { task: null, error: MESSAGES.ACCESS_DENIED };
+        }
+        return { task };
+    }
+
+    /**
+     * Executa operação com tratamento de erro padrão
+     */
+    private async executeWithErrorHandling(operation: () => Promise<Response>): Promise<Response> {
         try {
-            // Validação dos dados
+            return await operation();
+        } catch (error) {
+            console.error('Erro na operação:', error);
+            return { status: 500, json: () => ({ message: MESSAGES.INTERNAL_ERROR }) } as Response;
+        }
+    }
+
+    // ========== MÉTODOS CRUD ==========
+
+    async create(req: Request, res: Response): Promise<Response> {
+        return this.executeWithErrorHandling(async () => {
             const validation = this.validateTaskData(req.body);
             if (!validation.isValid) {
                 return res.status(400).json({ message: validation.error });
             }
 
-            // Criar tarefa
             const taskData = {
                 ...req.body,
-                user: req.user, // Assumindo que o middleware de auth adiciona o user
+                user: req.user,
                 status: req.body.status || 'pendente',
                 isHabit: req.body.isHabit || false
             };
             
             const task = await taskRepository.create(taskData as Task);
             return res.status(201).json(task);
-        } catch (error) {
-            console.error('Erro ao criar tarefa:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        });
     }
 
     async list(req: Request, res: Response): Promise<Response> {
-        try {
-            const userId = req.user?.id;
-            if (!userId) {
-                return res.status(401).json({ message: "Usuário não autenticado" });
+        return this.executeWithErrorHandling(async () => {
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
             }
 
             const { type, status, groupId } = req.query;
-            let tasks: Task[];
+            const userId = auth.userId!;
 
-            if (type === 'habits') {
-                tasks = await taskRepository.findHabits(userId);
-            } else if (type === 'tasks') {
-                tasks = await taskRepository.findTasks(userId);
-            } else if (status) {
-                tasks = await taskRepository.findByStatus(status as string, userId);
-            } else if (groupId) {
-                tasks = await taskRepository.findByGroupId(Number(groupId));
-            } else {
-                tasks = await taskRepository.findByUserId(userId);
-            }
+            const taskMethods = {
+                habits: () => taskRepository.findHabits(userId),
+                tasks: () => taskRepository.findTasks(userId),
+                status: () => taskRepository.findByStatus(status as string, userId),
+                group: () => taskRepository.findByGroupId(Number(groupId)),
+                default: () => taskRepository.findByUserId(userId)
+            };
+
+            const method = taskMethods[type as keyof typeof taskMethods] || taskMethods.default;
+            const tasks = await method();
 
             return res.status(200).json(tasks);
-        } catch (error) {
-            console.error('Erro ao listar tarefas:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        });
     }
 
     async getById(req: Request, res: Response): Promise<Response> {
-        try {
-            const id = Number(req.params.id);
-            
-            if (isNaN(id)) {
-                return res.status(400).json({ message: MESSAGES.INVALID_ID });
+        return this.executeWithErrorHandling(async () => {
+            const idValidation = this.validateId(req.params.id);
+            if (!idValidation.isValid) {
+                return res.status(400).json({ message: idValidation.error });
             }
 
-            const task = await taskRepository.findById(id);
-            if (!task) {
-                return res.status(404).json({ message: MESSAGES.TASK_NOT_FOUND });
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
             }
 
-            // Verificar se a tarefa pertence ao usuário
-            if (task.user.id !== req.user?.id) {
-                return res.status(403).json({ message: MESSAGES.ACCESS_DENIED });
+            const ownership = await this.checkTaskOwnership(idValidation.taskId!, auth.userId!);
+            if (ownership.error) {
+                const statusCode = ownership.error === MESSAGES.TASK_NOT_FOUND ? 404 : 403;
+                return res.status(statusCode).json({ message: ownership.error });
             }
 
-            return res.status(200).json(task);
-        } catch (error) {
-            console.error('Erro ao buscar tarefa:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+            return res.status(200).json(ownership.task);
+        });
     }
 
     async update(req: Request, res: Response): Promise<Response> {
-        try {
-            const id = Number(req.params.id);
-            
-            if (isNaN(id)) {
-                return res.status(400).json({ message: MESSAGES.INVALID_ID });
+        return this.executeWithErrorHandling(async () => {
+            const idValidation = this.validateId(req.params.id);
+            if (!idValidation.isValid) {
+                return res.status(400).json({ message: idValidation.error });
             }
 
-            // Verificar se a tarefa existe e pertence ao usuário
-            const existingTask = await taskRepository.findById(id);
-            if (!existingTask) {
-                return res.status(404).json({ message: MESSAGES.TASK_NOT_FOUND });
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
             }
 
-            if (existingTask.user.id !== req.user?.id) {
-                return res.status(403).json({ message: MESSAGES.ACCESS_DENIED });
+            const ownership = await this.checkTaskOwnership(idValidation.taskId!, auth.userId!);
+            if (ownership.error) {
+                const statusCode = ownership.error === MESSAGES.TASK_NOT_FOUND ? 404 : 403;
+                return res.status(statusCode).json({ message: ownership.error });
             }
 
-            // Validar dados se fornecidos
             if (req.body.title || req.body.topic || req.body.group) {
                 const validation = this.validateTaskData(req.body);
                 if (!validation.isValid) {
@@ -145,110 +184,116 @@ export class TaskController implements RestController {
                 }
             }
 
-            await taskRepository.update(id, req.body);
+            await taskRepository.update(idValidation.taskId!, req.body, req.user);
             return res.status(204).send();
-        } catch (error) {
-            console.error('Erro ao atualizar tarefa:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        });
     }
 
     async delete(req: Request, res: Response): Promise<Response> {
-        try {
-            const id = Number(req.params.id);
-            
-            if (isNaN(id)) {
-                return res.status(400).json({ message: MESSAGES.INVALID_ID });
+        return this.executeWithErrorHandling(async () => {
+            const idValidation = this.validateId(req.params.id);
+            if (!idValidation.isValid) {
+                return res.status(400).json({ message: idValidation.error });
             }
 
-            // Verificar se a tarefa existe e pertence ao usuário
-            const task = await taskRepository.findById(id);
-            if (!task) {
-                return res.status(404).json({ message: MESSAGES.TASK_NOT_FOUND });
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
             }
 
-            if (task.user.id !== req.user?.id) {
-                return res.status(403).json({ message: MESSAGES.ACCESS_DENIED });
+            const ownership = await this.checkTaskOwnership(idValidation.taskId!, auth.userId!);
+            if (ownership.error) {
+                const statusCode = ownership.error === MESSAGES.TASK_NOT_FOUND ? 404 : 403;
+                return res.status(statusCode).json({ message: ownership.error });
             }
 
-            await taskRepository.delete(id);
+            await taskRepository.delete(idValidation.taskId!, req.user);
             return res.status(204).send();
-        } catch (error) {
-            console.error('Erro ao deletar tarefa:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        });
     }
 
-    // Métodos adicionais específicos para tarefas
+    // ========== MÉTODOS ESPECÍFICOS ==========
+
     async complete(req: Request, res: Response): Promise<Response> {
-        try {
-            const id = Number(req.params.id);
-            
-            if (isNaN(id)) {
-                return res.status(400).json({ message: MESSAGES.INVALID_ID });
-            }
-
-            // Verificar se a tarefa existe e pertence ao usuário
-            const task = await taskRepository.findById(id);
-            if (!task) {
-                return res.status(404).json({ message: MESSAGES.TASK_NOT_FOUND });
-            }
-
-            if (task.user.id !== req.user?.id) {
-                return res.status(403).json({ message: MESSAGES.ACCESS_DENIED });
-            }
-
-            await taskRepository.complete(id);
-            return res.status(200).json({ message: "Tarefa marcada como concluída" });
-        } catch (error) {
-            console.error('Erro ao concluir tarefa:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        return this.executeTaskAction(req, res, (id, user) => taskRepository.complete(id, user), "Tarefa marcada como concluída");
     }
 
     async reschedule(req: Request, res: Response): Promise<Response> {
-        try {
-            const id = Number(req.params.id);
-            const { newDate } = req.body;
-            
-            if (isNaN(id)) {
-                return res.status(400).json({ message: MESSAGES.INVALID_ID });
+        return this.executeWithErrorHandling(async () => {
+            const idValidation = this.validateId(req.params.id);
+            if (!idValidation.isValid) {
+                return res.status(400).json({ message: idValidation.error });
             }
 
+            const { newDate } = req.body;
             if (!newDate || isNaN(new Date(newDate).getTime())) {
                 return res.status(400).json({ message: MESSAGES.INVALID_DATE });
             }
 
-            // Verificar se a tarefa existe e pertence ao usuário
-            const task = await taskRepository.findById(id);
-            if (!task) {
-                return res.status(404).json({ message: MESSAGES.TASK_NOT_FOUND });
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
             }
 
-            if (task.user.id !== req.user?.id) {
-                return res.status(403).json({ message: MESSAGES.ACCESS_DENIED });
+            const ownership = await this.checkTaskOwnership(idValidation.taskId!, auth.userId!);
+            if (ownership.error) {
+                const statusCode = ownership.error === MESSAGES.TASK_NOT_FOUND ? 404 : 403;
+                return res.status(statusCode).json({ message: ownership.error });
             }
 
-            await taskRepository.reschedule(id, new Date(newDate));
+            await taskRepository.reschedule(idValidation.taskId!, new Date(newDate), req.user);
             return res.status(200).json({ message: "Tarefa reagendada com sucesso" });
-        } catch (error) {
-            console.error('Erro ao reagendar tarefa:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        });
+    }
+
+    async start(req: Request, res: Response): Promise<Response> {
+        return this.executeTaskAction(req, res, (id, user) => taskRepository.start(id, user), "Tarefa iniciada");
+    }
+
+    async pause(req: Request, res: Response): Promise<Response> {
+        return this.executeTaskAction(req, res, (id, user) => taskRepository.pause(id, user), "Tarefa pausada");
     }
 
     async getStats(req: Request, res: Response): Promise<Response> {
-        try {
-            const userId = req.user?.id;
-            if (!userId) {
-                return res.status(401).json({ message: "Usuário não autenticado" });
+        return this.executeWithErrorHandling(async () => {
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
             }
 
-            const stats = await taskRepository.getStatsByUser(userId);
+            const stats = await taskRepository.getStatsByUser(auth.userId!);
             return res.status(200).json(stats);
-        } catch (error) {
-            console.error('Erro ao buscar estatísticas:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
+        });
+    }
+
+    /**
+     * Executa ação específica em tarefa com validações comuns
+     */
+    private async executeTaskAction(
+        req: Request, 
+        res: Response, 
+        action: (id: number, user: any) => Promise<void>,
+        successMessage: string
+    ): Promise<Response> {
+        return this.executeWithErrorHandling(async () => {
+            const idValidation = this.validateId(req.params.id);
+            if (!idValidation.isValid) {
+                return res.status(400).json({ message: idValidation.error });
+            }
+
+            const auth = this.checkAuthentication(req);
+            if (!auth.isValid) {
+                return res.status(401).json({ message: auth.error });
+            }
+
+            const ownership = await this.checkTaskOwnership(idValidation.taskId!, auth.userId!);
+            if (ownership.error) {
+                const statusCode = ownership.error === MESSAGES.TASK_NOT_FOUND ? 404 : 403;
+                return res.status(statusCode).json({ message: ownership.error });
+            }
+
+            await action(idValidation.taskId!, req.user);
+            return res.status(200).json({ message: successMessage });
+        });
     }
 } 

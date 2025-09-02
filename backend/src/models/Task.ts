@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 import { Group } from "./Group";
 import { TaskLog } from "./TaskLog";
@@ -22,6 +22,12 @@ export class Task{
 
     @Column({ type: "datetime",nullable: true})
     limitDate?: Date | null;
+    
+    @CreateDateColumn()
+    createdAt!: Date;
+    
+    @Column({ type: "datetime",nullable: true})
+    completedAt?: Date;
 
     @ManyToOne(() => User, user => user.tasks, { onDelete: "CASCADE"})
     user: User;

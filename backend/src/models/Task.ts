@@ -20,8 +20,8 @@ export class Task{
     @Column()
     isHabit: boolean;
 
-    @Column({ nullable: true})
-    limitDate: Date | null;
+    @Column({ type: "datetime",nullable: true})
+    limitDate?: Date | null;
 
     @ManyToOne(() => User, user => user.tasks, { onDelete: "CASCADE"})
     user: User;

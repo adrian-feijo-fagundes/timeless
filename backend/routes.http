@@ -59,20 +59,19 @@ Content-Type: application/json
 
 # Listar todos os usuários (GET) - COM TOKEN
 GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVkcm9AdGVzdC5jb20iLCJpYXQiOjE3NTY3Njk0NTMsImV4cCI6MTc1Njc3MzA1M30.slUcMr6pczAjcp9VQHHah9g06VejsD1yT2VvIIbphfI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVkcm9AdGVzdC5jb20iLCJpYXQiOjE3NTcwMjQyMjQsImV4cCI6MTc1NzAyNzgyNH0.Ns-7r7R-ala1MY0OmVLwGV9ASX4kQjjgnVR-D_u5Nys
 
 ###
 
 # Buscar usuário por ID (GET) - COM TOKEN
 GET http://localhost:3000/user/1
-Authorization: Bearer SEU_TOKEN_AQUI
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVkcm9AdGVzdC5jb20iLCJpYXQiOjE3NTcwMjQyMjQsImV4cCI6MTc1NzAyNzgyNH0.Ns-7r7R-ala1MY0OmVLwGV9ASX4kQjjgnVR-D_u5Nys
 ###
 
 # Atualizar usuário com id 1 (PUT) - COM TOKEN
 PUT http://localhost:3000/user/1
 Content-Type: application/json
-Authorization: Bearer SEU_TOKEN_AQUI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVkcm9AdGVzdC5jb20iLCJpYXQiOjE3NTY3Njk0NTMsImV4cCI6MTc1Njc3MzA1M30.slUcMr6pczAjcp9VQHHah9g06VejsD1yT2VvIIbphfI
 
 {
     "name": "Pedro Silva Santos",
@@ -85,7 +84,7 @@ Authorization: Bearer SEU_TOKEN_AQUI
 
 # Deletar usuário com id 1 (DELETE) - COM TOKEN
 DELETE http://localhost:3000/user/1
-Authorization: Bearer SEU_TOKEN_AQUI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVkcm9AdGVzdC5jb20iLCJpYXQiOjE3NTY3Njk0NTMsImV4cCI6MTc1Njc3MzA1M30.slUcMr6pczAjcp9VQHHah9g06VejsD1yT2VvIIbphfI
 
 ###
 
@@ -133,7 +132,7 @@ POST http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "email": "email-invalido",
+    "email": "email@invalido.br",
     "name": "Teste",
     "password": "123456",
     "birthday": "1990-06-12T10:00:00.000Z"

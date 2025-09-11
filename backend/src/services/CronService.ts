@@ -13,22 +13,16 @@ export class CronService {
         return CronService.instance;
     }
 
-    /**
-     * Inicia o job de console.log a cada 10 segundos
-     */
+
     public startConsoleLogJob(): void {
         const jobId = 'console-log-10s';
         
-        // Para o job se já existir
         if (this.jobs.has(jobId)) {
             this.stopJob(jobId);
         }
 
-        // Cria novo job que executa a cada 10 segundos
         const job = cron.schedule('*/10 * * * * *', () => {
-            console.log(`[CRON] Executando job a cada 10 segundos - ${new Date().toISOString()}`);
-        }, {
-            scheduled: false // Não inicia automaticamente
+            console.log(`[CRON] Job console.log iniciado- ${new Date().toISOString()}`);
         });
 
         this.jobs.set(jobId, job);
@@ -37,9 +31,7 @@ export class CronService {
         console.log('[CRON] Job de console.log iniciado - executando a cada 10 segundos');
     }
 
-    /**
-     * Para um job específico
-     */
+
     public stopJob(jobId: string): void {
         const job = this.jobs.get(jobId);
         if (job) {
@@ -50,9 +42,7 @@ export class CronService {
         }
     }
 
-    /**
-     * Para todos os jobs
-     */
+
     public stopAllJobs(): void {
         this.jobs.forEach((job, jobId) => {
             job.stop();
@@ -63,9 +53,6 @@ export class CronService {
         console.log('[CRON] Todos os jobs foram parados');
     }
 
-    /**
-     * Lista todos os jobs ativos
-     */
     public listActiveJobs(): string[] {
         return Array.from(this.jobs.keys());
     }

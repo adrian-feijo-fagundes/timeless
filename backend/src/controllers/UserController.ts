@@ -163,7 +163,7 @@ export class UserController implements RestController {
             }
 
             // Gerar token
-            const token = generateToken({ userId: user.id, email: user.email });
+            const token = generateToken({ id: user.id, email: user.email });
             
             // Remover senha apenas para a resposta
             const { password: _, ...userWithoutPassword } = user;

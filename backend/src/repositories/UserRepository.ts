@@ -27,8 +27,17 @@ export class UserRepository {
      * Remove a senha do objeto usuário
      */
     private removePassword(user: User): UserResponse {
-        const { password, hashPassword, ...userResponse } = user;
-        return userResponse as UserResponse;
+        return {
+            id: user.id,
+            email: user.email,
+            phone: user.phone,
+            gender: user.gender,
+            createdAt: user.createdAt,
+            birthday: user.birthday,
+            tasks: user.tasks,
+            groups: user.groups,
+            tasksLog: user.tasksLog,
+        } as UserResponse;
     }
 
     async create(data: User): Promise<UserResponse> {

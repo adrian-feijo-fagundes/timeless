@@ -140,42 +140,4 @@ export class UserController implements RestController {
             return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
         }
     }
-
-    async login(req: Request, res: Response): Promise<Response> {
-        try {
-            const { email, password } = req.body;
-
-            // Validação básica
-            if (!email || !password) {
-                return res.status(400).json({ message: MESSAGES.EMAIL_PASSWORD_REQUIRED });
-            }
-
-            // Buscar usuário (com senha para autenticação)
-            const user = await userRepository.findByEmail(email);
-            if (!user) {
-                return res.status(404).json({ message: MESSAGES.USER_NOT_FOUND });
-            }
-
-            // Verificar senha
-            const isValid = await bcrypt.compare(password, user.password);
-            if (!isValid) {
-                return res.status(401).json({ message: MESSAGES.INVALID_CREDENTIALS });
-            }
-
-            // Gerar token
-            const token = generateToken({ id: user.id, email: user.email });
-            
-            // Remover senha apenas para a resposta
-            const { password: _, ...userWithoutPassword } = user;
-
-            return res.json({
-                message: MESSAGES.LOGIN_SUCCESS,
-                token,
-                user: userWithoutPassword
-            });
-        } catch (error) {
-            console.error('Erro ao fazer login:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
-    }
 }

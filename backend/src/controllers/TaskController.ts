@@ -82,19 +82,20 @@ export class TaskController implements RestController {
     /**
      * Executa operação com tratamento de erro padrão
      */
-    private async executeWithErrorHandling(operation: () => Promise<Response>): Promise<Response> {
+    private async executeWithErrorHandling(res: Response, operation: () => Promise<Response>): Promise<Response> {
+        
         try {
             return await operation();
         } catch (error) {
             console.error('Erro na operação:', error);
-            return { status: 500, json: () => ({ message: MESSAGES.INTERNAL_ERROR }) } as Response;
+            return  res.status(500).json({ message: MESSAGES.INTERNAL_ERROR }) 
         }
     }
 
     // ========== MÉTODOS CRUD ==========
 
     async create(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const validation = this.validateTaskData(req.body);
             if (!validation.isValid) {
                 return res.status(400).json({ message: validation.error });
@@ -113,7 +114,7 @@ export class TaskController implements RestController {
     }
 
     async list(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const auth = this.checkAuthentication(req);
             if (!auth.isValid) {
                 return res.status(401).json({ message: auth.error });
@@ -138,7 +139,7 @@ export class TaskController implements RestController {
     }
 
     async getById(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const idValidation = this.validateId(req.params.id);
             if (!idValidation.isValid) {
                 return res.status(400).json({ message: idValidation.error });
@@ -160,7 +161,7 @@ export class TaskController implements RestController {
     }
 
     async update(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const idValidation = this.validateId(req.params.id);
             if (!idValidation.isValid) {
                 return res.status(400).json({ message: idValidation.error });
@@ -190,7 +191,7 @@ export class TaskController implements RestController {
     }
 
     async delete(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const idValidation = this.validateId(req.params.id);
             if (!idValidation.isValid) {
                 return res.status(400).json({ message: idValidation.error });
@@ -219,7 +220,7 @@ export class TaskController implements RestController {
     }
 
     async reschedule(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const idValidation = this.validateId(req.params.id);
             if (!idValidation.isValid) {
                 return res.status(400).json({ message: idValidation.error });
@@ -255,7 +256,7 @@ export class TaskController implements RestController {
     }
 
     async getStats(req: Request, res: Response): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const auth = this.checkAuthentication(req);
             if (!auth.isValid) {
                 return res.status(401).json({ message: auth.error });
@@ -275,7 +276,7 @@ export class TaskController implements RestController {
         action: (id: number, user: any) => Promise<void>,
         successMessage: string
     ): Promise<Response> {
-        return this.executeWithErrorHandling(async () => {
+        return this.executeWithErrorHandling(res, async () => {
             const idValidation = this.validateId(req.params.id);
             if (!idValidation.isValid) {
                 return res.status(400).json({ message: idValidation.error });

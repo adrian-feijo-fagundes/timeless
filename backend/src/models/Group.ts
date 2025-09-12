@@ -41,14 +41,14 @@ export class Group {
     @Column({ default: 0 })
     completionRate: number;
 
-    @Column("json", { default: [1, 2, 3, 4, 5] })
+    @Column("json")
     days: number[];
 
     @CreateDateColumn()
     createdAt!: Date;
 
     @OneToMany(() => Task, task => task.group)
-    tasks: Task[];
+    tasks!: Task[];
 
     @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE"})
     user: User;
@@ -61,7 +61,6 @@ export class Group {
         color?: string,
         maxTasksPerDay?: number,
         sendNotifications?: boolean,
-        tasks: Task[] = []
     ) {
         this.title = title;
         this.user = user;
@@ -70,7 +69,6 @@ export class Group {
         this.color = color ?? '#3B82F6'; // Azul padrão
         this.maxTasksPerDay = maxTasksPerDay ?? 10; // 10 tarefas por dia
         this.sendNotifications = sendNotifications ?? true;
-        this.tasks = tasks;
         
         // Valores padrão para estatísticas
         this.totalTasks = 0;

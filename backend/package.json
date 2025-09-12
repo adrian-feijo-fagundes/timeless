@@ -11,17 +11,21 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@types/node-cron": "^3.0.11",
     "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.2",
+    "node-cron": "^4.2.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.25"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",

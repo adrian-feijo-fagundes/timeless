@@ -9,13 +9,12 @@ const authMiddleware = new AuthMiddleware();
 const userRoutes = Router();
 
 // ========== ROTAS PÚBLICAS (sem JWT) ==========
-userRoutes.post('/user', userController.create); // Registro
-userRoutes.post('/user/login', userController.login); // Login
+userRoutes.post('/users', userController.create); // Registro
 
 // ========== ROTAS PROTEGIDAS (com JWT) ==========
-userRoutes.get('/user', authMiddleware.authenticateToken, userController.list);
-userRoutes.get('/user/:id', authMiddleware.authenticateToken, userController.getById);
-userRoutes.put('/user/:id', authMiddleware.authenticateToken, userController.update);
-userRoutes.delete('/user/:id', authMiddleware.authenticateToken, userController.delete);
+userRoutes.get('/users', authMiddleware.authenticateToken, userController.list);
+userRoutes.get('/users/:id', authMiddleware.authenticateToken, userController.getById);
+userRoutes.put('/users/:id', authMiddleware.authenticateToken, userController.update);
+userRoutes.delete('/users/:id', authMiddleware.authenticateToken, userController.delete);
 
 export default userRoutes;

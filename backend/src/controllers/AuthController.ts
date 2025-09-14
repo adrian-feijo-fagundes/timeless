@@ -71,9 +71,4 @@ export class AuthController {
             return res.status(500).json({ message: "Internal server error" });
         }
     }
-
-    async logout(req: Request, res: Response): Promise<Response> {
-        res.clearCookie("token");
-        return res.json({ messafe: MESSAGES.LOGOUT_SUCCESS})
-    }
 }

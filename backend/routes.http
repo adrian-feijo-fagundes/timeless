@@ -30,12 +30,12 @@ Agora você tem exemplos completos para testar tanto as rotas públicas quanto a
 ###
 
 # Criar um usuário (POST) - Registro
-POST http://localhost:3000/user
+POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-    "email": "pedro@test.com",
-    "name": "Pedro Silva",
+    "email": "test@test.com",
+    "name": "test",
     "password": "123456",
     "phone": "11999999999",
     "gender": "male",
@@ -58,8 +58,8 @@ Content-Type: application/json
 # ========== REQUISIÇÕES PROTEGIDAS (COM JWT) ==========
 
 # Listar todos os usuários (GET) - COM TOKEN
-GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoicGVkcm9AdGVzdC5jb20iLCJpYXQiOjE3NTcwMjQyMjQsImV4cCI6MTc1NzAyNzgyNH0.Ns-7r7R-ala1MY0OmVLwGV9ASX4kQjjgnVR-D_u5Nys
+GET http://localhost:3000/users/18
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsImVtYWlsIjoidGVzdGVAZ21haWwuY29tIiwiaWF0IjoxNzU3NzIyMjM4LCJleHAiOjE3NTc3MjU4Mzh9.m0MIqiVYmlwJcAkqYh0EYmbOMO2vzV6aw3nwLKXQk8g
 
 ###
 

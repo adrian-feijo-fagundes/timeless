@@ -1,0 +1,27 @@
+:root {
+  --bs-primary: #006d77;
+  --bs-secondary: #83c5be;
+  --bs-background: #ffffff;
+  --bs-card-bg: #edf6f9;
+  --bs-text: #023047;
+  --bs-navbar-bg: #ffffff;
+  --bs-navbar-text: #006d77;
+  --bs-main-btn: #009688;
+}
+
+body {
+  background-color: var(--bs-background);
+}
+
+.card.task-item {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card.task-item:hover {
+  transform: scale(1.03);
+}
+
+.text-truncate {
+  max-height: 40px;
+  overflow: hidden;
+}

@@ -17,7 +17,4 @@ groupRoutes.get('/group/:id', groupController.getById);
 groupRoutes.put('/group/:id', groupController.update);
 groupRoutes.delete('/group/:id', groupController.delete);
 
-// Rota adicional para estatísticas
-groupRoutes.patch('/group/:id/stats', groupController.updateStats);
-
 export default groupRoutes; 

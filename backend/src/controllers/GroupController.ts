@@ -40,16 +40,6 @@ export class GroupController implements RestController {
             return { isValid: false, error: MESSAGES.INVALID_STATUS };
         }
         
-        // Validar prioridade se fornecida
-        if (data.priority !== undefined && (data.priority < 0 || data.priority > 10)) {
-            return { isValid: false, error: MESSAGES.INVALID_PRIORITY };
-        }
-        
-        // Validar cor se fornecida
-        if (data.color && !/^#[0-9A-F]{6}$/i.test(data.color)) {
-            return { isValid: false, error: MESSAGES.INVALID_COLOR };
-        }
-        
         return { isValid: true };
     }
 

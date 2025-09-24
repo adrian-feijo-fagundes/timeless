@@ -40,7 +40,43 @@
         <pre id="output"></pre>
     </div>
     
+
+    <div>
+        <h1>Grupos</h1>
+        <!-- 
+            title -> precisa
+            days 0-6
+            status -> n precisa
+            prioridade -> n precisa
+            cor -> n precisa
+            maxTasksPerDay -> 
+        -->
+    </div>
+    <div>
+        <h1>Tarefas</h1>
+
+        <label>Grupo: <input type="text"></label>
+        <label>Titulo:<input type="text" name="task-title" id="task-title" required></label>
+        <br><br>
+
+        <label>Assunto: <input type="text" name="task-topic" id="task-topic"></label>
+        <br><br>
+
+        <label>Descrição: <input type="text" name="description" id="description"></label>
+        <br><br>
+
+        <label>Data de Vencimento:<input type="date" name="task-date" id="task-date" required></label>
+        <br><br>
+
+        <label for="isHabito">
+            <input type="checkbox" name="habit-checkbox" id="habit-checkbox"> É um hábito
+        </label>
+
+        <button id="create-task"></button>
+    </div>
+    
     <script src="js/app.js"></script>
+    
     <script src="js/auth.js"></script>
 </body>
 </html>

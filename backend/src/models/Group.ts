@@ -13,9 +13,6 @@ export class Group {
     @Column({ nullable: true, default: "" })
     description: string;
 
-    @Column({ default: "#3B82F6" })
-    color: string;
-
     @Column({
         type: 'enum',
         enum: ['active', 'archived', 'paused'],
@@ -28,9 +25,6 @@ export class Group {
 
     @Column({ default: 10 })
     maxTasksPerDay: number;
-
-    @Column({ default: true })
-    sendNotifications: boolean;
 
     @Column({ default: 0 })
     totalTasks: number;
@@ -58,17 +52,13 @@ export class Group {
         user: User,
         days?: number[],
         description?: string,
-        color?: string,
         maxTasksPerDay?: number,
-        sendNotifications?: boolean,
     ) {
         this.title = title;
         this.user = user;
         this.days = days ?? [1, 2, 3, 4, 5]; // Segunda a sexta por padrão
         this.description = description ?? '';
-        this.color = color ?? '#3B82F6'; // Azul padrão
         this.maxTasksPerDay = maxTasksPerDay ?? 10; // 10 tarefas por dia
-        this.sendNotifications = sendNotifications ?? true;
         
         // Valores padrão para estatísticas
         this.totalTasks = 0;

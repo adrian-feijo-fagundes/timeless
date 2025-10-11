@@ -1,4 +1,4 @@
-Aqui está um **guia passo a passo** para o `CONTRIBUTING.md`, organizado a partir do que você pediu e já com os **comandos necessários**.
+
 
 ---
 

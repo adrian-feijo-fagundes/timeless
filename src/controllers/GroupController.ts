@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { GroupRepository } from "../repositories/GroupRepository";
 import { RestController } from "./RestController";
 import { Group } from "../models/Group";
-import { User } from "../models/User";
 
 const groupRepository = new GroupRepository();
 
@@ -33,11 +32,6 @@ export class GroupController implements RestController {
         // Validar dias (0-6)
         if (!Array.isArray(days) || !days.every(day => day >= 0 && day <= 6)) {
             return { isValid: false, error: MESSAGES.INVALID_DAYS };
-        }
-        
-        // Validar status se fornecido
-        if (data.status && !['active', 'archived', 'paused'].includes(data.status)) {
-            return { isValid: false, error: MESSAGES.INVALID_STATUS };
         }
         
         return { isValid: true };
@@ -161,33 +155,6 @@ export class GroupController implements RestController {
             return res.status(204).send();
         } catch (error) {
             console.error('Erro ao deletar grupo:', error);
-            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
-        }
-    }
-
-    // Método adicional para atualizar estatísticas
-    async updateStats(req: Request, res: Response): Promise<Response> {
-        try {
-            const id = Number(req.params.id);
-            
-            if (isNaN(id)) {
-                return res.status(400).json({ message: MESSAGES.INVALID_ID });
-            }
-
-            // Verificar se o grupo existe e pertence ao usuário
-            const group = await groupRepository.findById(id);
-            if (!group) {
-                return res.status(404).json({ message: MESSAGES.GROUP_NOT_FOUND });
-            }
-
-            if (group.user.id !== req.user?.id) {
-                return res.status(403).json({ message: "Acesso negado" });
-            }
-
-            await groupRepository.updateStats(id);
-            return res.status(200).json({ message: "Estatísticas atualizadas com sucesso" });
-        } catch (error) {
-            console.error('Erro ao atualizar estatísticas:', error);
             return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
         }
     }

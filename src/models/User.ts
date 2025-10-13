@@ -27,15 +27,6 @@ export class User {
     @Column() 
     password: string;
 
-    @Column({ type: 'varchar', length: 20, nullable: true, default: null })
-    phone: string | null;
-
-    @Column({
-        type: 'enum',
-        enum: ['male', 'female', 'preferNotToSay', 'other']
-    })
-    gender: string;
-
     @CreateDateColumn()
     createdAt!: Date;
 
@@ -53,7 +44,7 @@ export class User {
     @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
     tasksLog?: TaskLog[];
 
-    private previousPassword!: string;
+    previousPassword!: string;
 
     @BeforeInsert() // Antes de inserir um novo usuário
     @BeforeUpdate() // Antes de atualizar um usuário existente
@@ -77,16 +68,12 @@ export class User {
         email: string,
         password: string,
         birthday: Date,
-        phone: string,
-        gender: string,
         tasksLog: TaskLog[]
 
     ) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.phone = phone ?? null;
-        this.gender = gender ?? 'preferNotToSay';
         this.birthday = birthday;
         this.tasksLog = tasksLog
     }

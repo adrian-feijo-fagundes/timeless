@@ -15,7 +15,7 @@ export class TaskRepository {
     /**
      * Adiciona um registro no TaskLog
      */
-    private async addTaskLog(task: Task, user: any, message: string): Promise<void> {
+    private async addTaskLog(task: Task, user: any, message: string): Promise<void> {''
         const taskLog = this.taskLogRepository.create({ task, user, message });
         await this.taskLogRepository.save(taskLog);
     }

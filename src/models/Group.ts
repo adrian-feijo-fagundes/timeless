@@ -13,27 +13,8 @@ export class Group {
     @Column({ nullable: true, default: "" })
     description: string;
 
-    @Column({
-        type: 'enum',
-        enum: ['active', 'archived', 'paused'],
-        default: 'active'
-    })
-    status: string;
-
-    @Column({ default: true })
-    isVisible: boolean;
-
     @Column({ default: 10 })
     maxTasksPerDay: number;
-
-    @Column({ default: 0 })
-    totalTasks: number;
-
-    @Column({ default: 0 })
-    completedTasks: number;
-
-    @Column({ default: 0 })
-    completionRate: number;
 
     @Column("json")
     days: number[];
@@ -58,13 +39,6 @@ export class Group {
         this.user = user;
         this.days = days ?? [1, 2, 3, 4, 5]; // Segunda a sexta por padrão
         this.description = description ?? '';
-        this.maxTasksPerDay = maxTasksPerDay ?? 10; // 10 tarefas por dia
-        
-        // Valores padrão para estatísticas
-        this.totalTasks = 0;
-        this.completedTasks = 0;
-        this.completionRate = 0;
-        this.status = 'active';
-        this.isVisible = true;
+        this.maxTasksPerDay = maxTasksPerDay ?? 10; // 10 tarefas por dia    
     }
 }

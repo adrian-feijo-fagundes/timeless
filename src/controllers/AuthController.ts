@@ -24,7 +24,8 @@ export class AuthController {
 
             // Validação básica
             if (!email || !password) {
-                return res.status(400).json({ message: MESSAGES.EMAIL_PASSWORD_REQUIRED });
+                return res.status(400).json(
+                    { message: MESSAGES.EMAIL_PASSWORD_REQUIRED });
             }
 
             // Buscar usuário (com senha para autenticação)
@@ -43,12 +44,12 @@ export class AuthController {
             const token = generateToken({ id: user.id, email: user.email });
             
             // Remover senha apenas para a resposta
-            const { password: _, ...userWithoutPassword } = user;
+            const { password: _, birthday, createdAt, previousPassword, ...userWithoutPassword } = user;
 
             return res.json({
                 message: MESSAGES.LOGIN_SUCCESS,
                 token,
-                userWithoutPassword
+                user: userWithoutPassword
             });
         } catch (error) {
             console.error('Erro ao fazer login:', error);
@@ -63,12 +64,12 @@ export class AuthController {
             const id = req.user.id;
             const user = await userRepository.findById(id);
             if (!user) {
-                return res.status(404).json({ message: "User not found" });
+                return res.status(404).json({ message: MESSAGES.USER_NOT_FOUND });
             }
             return res.json(user);
         } catch(error) {
             console.error("Me error: ", error);
-            return res.status(500).json({ message: "Internal server error" });
+            return res.status(500).json({ message: MESSAGES.INTERNAL_ERROR });
         }
     }
 }

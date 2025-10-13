@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/UserRepository";
 import { RestController } from "./RestController";
-import { generateToken } from "../config/auth";
-import bcrypt from "bcryptjs";
 
 const userRepository = new UserRepository();
 

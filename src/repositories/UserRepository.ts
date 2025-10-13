@@ -7,8 +7,6 @@ export interface UserResponse {
     id: number;
     email: string;
     name: string;
-    phone: string | null;
-    gender: string;
     createdAt: Date;
     birthday: Date;
     tasks?: any[];
@@ -30,8 +28,7 @@ export class UserRepository {
         return {
             id: user.id,
             email: user.email,
-            phone: user.phone,
-            gender: user.gender,
+            name: user.name,
             createdAt: user.createdAt,
             birthday: user.birthday,
             tasks: user.tasks,

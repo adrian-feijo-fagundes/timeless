@@ -18,11 +18,6 @@ export class AuthMiddleware {
         const authHeader = req.headers.authorization;
         const token = authHeader?.split(" ")[1]; // Formato: Bearer <token>
 
-
-        if (!req.url.startsWith('/socket.io/')) {
-            console.log('Rota que passa pelo middleware:', req.headers.authorization);
-        }
-
         if (!token) {
             return res.status(401).json({ message: "Token não fornecido"});
         }

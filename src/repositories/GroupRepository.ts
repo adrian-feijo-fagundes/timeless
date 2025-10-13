@@ -42,23 +42,4 @@ export class GroupRepository {
     async delete(id: number): Promise<void> {
         await this.repository.delete(id);
     }
-
-    async updateStats(id: number): Promise<void> {
-        const group = await this.repository.findOne({
-            where: { id },
-            relations: ['tasks']
-        });
-
-        if (group) {
-            const totalTasks = group.tasks.length;
-            const completedTasks = group.tasks.filter(task => task.status === 'concluída').length;
-            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
-            await this.repository.update(id, {
-                totalTasks,
-                completedTasks,
-                completionRate
-            });
-        }
-    }
 } 

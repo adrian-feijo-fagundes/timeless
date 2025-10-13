@@ -1,0 +1,77 @@
+
+## ✅ **Principais Mudanças:**
+
+### ** Rotas Protegidas (com JWT):**
+- `GET /user` - Listar usuários
+- `GET /user/:id` - Buscar usuário
+- `PUT /user/:id` - Atualizar usuário  
+- `DELETE /user/:id` - Deletar usuário
+
+### **🔓 Rotas Públicas (sem JWT):**
+- `POST /user` - Registro
+- `POST /user/login` - Login
+
+### **🚨 Novos Casos de Erro:**
+- Token não fornecido
+- Token inválido
+- Token expirado
+- Formato de token incorreto
+
+### ** Fluxo de Uso:**
+1. **Login** → Obter token
+2. **Copiar token** da resposta
+3. **Usar token** em requisições protegidas
+
+Agora você tem exemplos completos para testar tanto as rotas públicas quanto as protegidas! 🎯
+
+## ✅ **Casos de Erro Cobe
+
+# ========== REQUISIÇÕES PÚBLICAS (SEM JWT) ==========
+###
+
+# Criar um usuário (POST) - Registro
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "email": "usuario2@usuario.com",
+    "name": "usuario2",
+    "password": "1234",
+    "birthday": "1990-06-12T10:00:00.000Z"
+}
+
+###
+
+# Login (POST) - Obter token
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "usuario@usuario.com",
+    "password": "1234"
+}
+
+###
+
+# ========== REQUISIÇÕES PROTEGIDAS (COM JWT) ==========
+
+# Listar todos os usuários (GET) - COM TOKEN
+GET http://localhost:3000/users/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYwMzgwMTQ4LCJleHAiOjE3NjAzODM3NDh9.8M2U_rUD21pzl74PEoJZdFySAtZBB_9R_AhaBOUIDIk
+
+###
+
+GET http://localhost:3000/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYwMzgwMTQ4LCJleHAiOjE3NjAzODM3NDh9.8M2U_rUD21pzl74PEoJZdFySAtZBB_9R_AhaBOUIDIk
+###
+PUT http://localhost:3000/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYwMzgwMTQ4LCJleHAiOjE3NjAzODM3NDh9.8M2U_rUD21pzl74PEoJZdFySAtZBB_9R_AhaBOUIDIk
+Content-Type: application/json
+
+{
+    "name": "usuario"
+}
+
+###
+DELETE http://localhost:3000/users/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYwMzgwMTQ4LCJleHAiOjE3NjAzODM3NDh9.8M2U_rUD21pzl74PEoJZdFySAtZBB_9R_AhaBOUIDIk

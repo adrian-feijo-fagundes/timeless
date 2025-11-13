@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, Matches, MaxLength, MinLength, MaxDate, IsDate, IsOptional } from "class-validator";
+import { IsEmail, Matches, MaxLength, MinLength, MaxDate, IsDate, IsOptional, IsNumber } from "class-validator";
 import { MinAge } from "../../decorators/MinAge";
 import { Type } from "class-transformer";
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/UserRepository";
-import { RestController } from "./RestController";
+import { IController } from "./IController";
 
 const userRepository = new UserRepository();
 
@@ -10,38 +10,16 @@ const MESSAGES = {
     INVALID_CREDENTIALS: "Credenciais inválidas",
     INTERNAL_ERROR: "Erro interno do servidor",
     INVALID_ID: "ID inválido",
-    REQUIRED_FIELDS: "Nome, email, senha e data de nascimento são obrigatórios",
-    INVALID_EMAIL: "Email inválido",
-    EMAIL_PASSWORD_REQUIRED: "Email e senha são obrigatórios",
     LOGIN_SUCCESS: "Login realizado com sucesso",
     EMAIL_ALREADY_EXISTS: "Email já está em uso"
 };
 
-const validateUserData = (data: any): { isValid: boolean; error?: string } => {
-    const { name, email, password, birthday } = data;
-    
-    if (!name || !email || !password || !birthday) {
-        return { isValid: false, error: MESSAGES.REQUIRED_FIELDS };
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return { isValid: false, error: MESSAGES.INVALID_EMAIL };
-    }
-    
-    return { isValid: true };
-};
-export class UserController implements RestController {
+
+export class UserController implements IController {
     
 
     async create(req: Request, res: Response): Promise<Response> {
         try {
-            // Validação dos dados
-            const validation = validateUserData(req.body);
-            if (!validation.isValid) {
-                return res.status(400).json({ message: validation.error });
-            }
-
             // Verificar se email já existe
             const existingUser = await userRepository.findByEmail(req.body.email);
             if (existingUser) {
@@ -124,13 +102,11 @@ export class UserController implements RestController {
             if (isNaN(id)) {
                 return res.status(400).json({ message: MESSAGES.INVALID_ID });
             }
-
             // Verificar se usuário existe
             const user = await userRepository.findById(id);
             if (!user) {
                 return res.status(404).json({ message: MESSAGES.USER_NOT_FOUND });
             }
-
             await userRepository.delete(id);
             return res.status(204).send();
         } catch (error) {

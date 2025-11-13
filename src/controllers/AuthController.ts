@@ -10,7 +10,6 @@ const MESSAGES = {
     USER_NOT_FOUND: "Usuário não encontrado",
     INVALID_CREDENTIALS: "Credenciais inválidas",
     INTERNAL_ERROR: "Erro interno do servidor",
-    REQUIRED_FIELDS: "Nome, email, senha e data de nascimento são obrigatórios",
     EMAIL_PASSWORD_REQUIRED: "Email e senha são obrigatórios",
     LOGIN_SUCCESS: "Login realizado com sucesso",
     LOGOUT_SUCCESS: "Logout realizado com sucesso"
@@ -21,12 +20,6 @@ export class AuthController {
     async login(req: Request, res: Response): Promise<Response> {
         try {
             const { email, password } = req.body;
-
-            // Validação básica
-            if (!email || !password) {
-                return res.status(400).json(
-                    { message: MESSAGES.EMAIL_PASSWORD_REQUIRED });
-            }
 
             // Buscar usuário (com senha para autenticação)
             const user = await userRepository.findByEmail(email);

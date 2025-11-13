@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { GroupRepository } from "../repositories/GroupRepository";
-import { RestController } from "./RestController";
+import { IController } from "./IController";
 import { Group } from "../models/Group";
 
 const groupRepository = new GroupRepository();
@@ -17,7 +17,7 @@ const MESSAGES = {
     INVALID_COLOR: "Cor deve ser um código hexadecimal válido"
 };
 
-export class GroupController implements RestController {
+export class GroupController implements IController {
     
     /**
      * Valida dados básicos do grupo

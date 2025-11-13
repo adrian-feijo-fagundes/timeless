@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-export interface RestController {
+export interface IController {
     list: RequestHandler;
     create: RequestHandler;
     update: RequestHandler;

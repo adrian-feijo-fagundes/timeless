@@ -30,14 +30,14 @@ Agora você tem exemplos completos para testar tanto as rotas públicas quanto a
 ###
 
 # Criar um usuário (POST) - Registro
-POST http://localhost:3000/users
+POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-    "email": "usuario2@usuario.com",
-    "name": "usuario2",
-    "password": "1234",
-    "birthday": "1990-06-12T10:00:00.000Z"
+    "email": "pedro@usuario.com",
+    "name": "Pedro",
+    "password": "1234Aa!",
+    "birthday": "2000-06-12"
 }
 
 ###
@@ -47,7 +47,7 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "usuario@usuario.com",
+    "email": "usuario2@usuario.com",
     "password": "1234"
 }
 

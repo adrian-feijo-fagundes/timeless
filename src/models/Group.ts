@@ -13,7 +13,7 @@ export class Group {
     @Column({ nullable: true, default: "" })
     description: string;
 
-    @Column({ default: 10 })
+    @Column({ default: 2 })
     maxTasksPerDay: number;
 
     @Column("json")
@@ -39,6 +39,6 @@ export class Group {
         this.user = user;
         this.days = days ?? [1, 2, 3, 4, 5]; // Segunda a sexta por padrão
         this.description = description ?? '';
-        this.maxTasksPerDay = maxTasksPerDay ?? 10; // 10 tarefas por dia    
+        this.maxTasksPerDay = maxTasksPerDay ?? 2; // 10 tarefas por dia    
     }
 }

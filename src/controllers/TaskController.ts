@@ -82,14 +82,7 @@ export class TaskController extends RestController {
     /**
      * Executa operação com tratamento de erro padrão
      */
-    private async executeWithErrorHandling(res: Response, operation: () => Promise<Response>): Promise<Response> {
-        try {
-            return await operation();
-        } catch (error) {
-            console.error('Erro na operação:', error);
-            return  res.status(500).json({ message: MESSAGES.INTERNAL_ERROR }) 
-        }
-    }
+
 
     // ========== MÉTODOS CRUD ==========
 

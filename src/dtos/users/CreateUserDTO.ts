@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, Matches, MaxLength, MinLength, MaxDate, IsDate } from "class-validator";
-import { MinAge } from "../decorators/MinAge";
+import { MinAge } from "../../decorators/MinAge";
 import { Type } from "class-transformer";
 
 const MIN_AGE = 18

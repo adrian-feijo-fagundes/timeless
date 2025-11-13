@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { GroupRepository } from "../repositories/GroupRepository";
-import { IController } from "./IController";
+import { RestController } from "./RestController";
 import { Group } from "../models/Group";
 
 const groupRepository = new GroupRepository();
@@ -12,7 +12,7 @@ const MESSAGES = {
     INVALID_ID: "ID inválido",
 };
 
-export class GroupController implements IController {
+export class GroupController extends RestController {
     
 
     async create(req: Request, res: Response): Promise<Response> {

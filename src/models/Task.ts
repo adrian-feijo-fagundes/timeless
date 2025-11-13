@@ -47,7 +47,7 @@ export class Task{
         this.user = user
         this.group = group
         this.title = title
-        this.topic = topic || "outro"
+        this.topic = topic || "Other"
         this.status = status
         this.limitDate = limitDate
         this.tasksLog = tasksLog

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/UserRepository";
-import { IController } from "./IController";
+import { RestController } from "./RestController";
 
 const userRepository = new UserRepository();
 
@@ -15,7 +15,7 @@ const MESSAGES = {
 };
 
 
-export class UserController implements IController {
+export class UserController extends RestController {
     
 
     async create(req: Request, res: Response): Promise<Response> {

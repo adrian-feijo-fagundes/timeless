@@ -2,7 +2,8 @@ import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import { validateDto } from "../middlewares/validateDTO";
-import { CreateUserDTO } from "../dtos/CreateUserDTO";
+import { CreateUserDTO } from "../dtos/users/CreateUserDTO";
+import { UpdateUserDTO } from "../dtos/users/UpdateUserDTO";
 
 const userController = new UserController();
 const authMiddleware = new AuthMiddleware();
@@ -15,7 +16,7 @@ userRoutes.post('/register',validateDto(CreateUserDTO), userController.create); 
 // ========== ROTAS PROTEGIDAS (com JWT) ==========
 userRoutes.get('/users', authMiddleware.authenticateToken, userController.list);
 userRoutes.get('/users/:id', authMiddleware.authenticateToken, userController.getById);
-userRoutes.put('/users/:id', authMiddleware.authenticateToken, userController.update);
+userRoutes.put('/users/:id', authMiddleware.authenticateToken, validateDto(UpdateUserDTO), userController.update);
 userRoutes.delete('/users/:id', authMiddleware.authenticateToken, userController.delete);
 
 export default userRoutes;

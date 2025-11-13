@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TaskRepository } from "../repositories/TaskRepository";
-import { IController } from "./IController";
+import { RestController } from "./RestController";
 import { Task } from "../models/Task";
 
 const taskRepository = new TaskRepository();
@@ -20,7 +20,7 @@ const MESSAGES = {
 // Validações
 const VALID_STATUSES = ['pendente', 'em_andamento', 'concluída'];
 
-export class TaskController implements IController {
+export class TaskController extends RestController {
     
     /**
      * Valida dados básicos da tarefa

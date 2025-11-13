@@ -1,13 +1,4 @@
-import {
-    IsString,
-    IsOptional,
-    IsArray,
-    ArrayNotEmpty,
-    ArrayUnique,
-    IsInt,
-    Min,
-    Max
-} from "class-validator";
+import { IsString, IsOptional, IsArray, ArrayNotEmpty, ArrayUnique, IsInt, Min, Max } from "class-validator";
 
 export class GroupDTO {
     @IsString({ message: "O nome do grupo deve ser uma string" })

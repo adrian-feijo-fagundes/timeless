@@ -54,6 +54,44 @@ pensei em algo assim:
     data: 2025/11/18
     tasks: [7,8]
 
+preciso pegar: 
+    - todas tarefas do usuário
+    - separar por grupo
+    - calcular proximas datas de cada grupo
+    - alocar corretamente as tarefas
+
+    exemplo com varios grupos:
+
+    {
+        user_id: 1
+        schedule_tasks: {
+            2025-11-18: [
+                {
+                    group: 1
+                    name: math
+                    tasks: [1,2]
+                },
+                {
+                    group: 2
+                    name: sport
+                    tasks: [3,4]
+                }                
+            ],
+            2025-11-19: [
+                {
+                    group: 3
+                    name: enterteniment
+                    tasks: [5,6]
+                },
+                {
+                    group: 6
+                    name: sport
+                    tasks: [14,15]
+                }                
+            ]
+        }
+    }
+
 com relação a gamificação e estatisticas:
 
 Streak de Login vibe DuoLingo

@@ -10,45 +10,18 @@ const MESSAGES = {
     GROUP_NOT_FOUND: "Grupo não encontrado",
     INTERNAL_ERROR: "Erro interno do servidor",
     INVALID_ID: "ID inválido",
-    REQUIRED_FIELDS: "Título e dias são obrigatórios",
-    INVALID_DAYS: "Dias devem ser números de 0 a 6 (domingo a sábado)",
-    INVALID_STATUS: "Status deve ser: active, archived ou paused",
-    INVALID_PRIORITY: "Prioridade deve ser um número entre 0 e 10",
-    INVALID_COLOR: "Cor deve ser um código hexadecimal válido"
 };
 
 export class GroupController implements IController {
     
-    /**
-     * Valida dados básicos do grupo
-     */
-    private validateGroupData(data: any): { isValid: boolean; error?: string } {
-        const { title, days } = data;
-        
-        if (!title || !days) {
-            return { isValid: false, error: MESSAGES.REQUIRED_FIELDS };
-        }
-        
-        // Validar dias (0-6)
-        if (!Array.isArray(days) || !days.every(day => day >= 0 && day <= 6)) {
-            return { isValid: false, error: MESSAGES.INVALID_DAYS };
-        }
-        
-        return { isValid: true };
-    }
 
     async create(req: Request, res: Response): Promise<Response> {
         try {
-            // Validação dos dados
-            const validation = this.validateGroupData(req.body);
-            if (!validation.isValid) {
-                return res.status(400).json({ message: validation.error });
-            }
 
             // Criar grupo
             const groupData = {
                 ...req.body,
-                user: req.user // Assumindo que o middleware de auth adiciona o user
+                user: req.user
             };
             
             const group = await groupRepository.create(groupData as Group);
@@ -115,14 +88,6 @@ export class GroupController implements IController {
 
             if (existingGroup.user.id !== req.user?.id) {
                 return res.status(403).json({ message: "Acesso negado" });
-            }
-
-            // Validar dados se fornecidos
-            if (req.body.title || req.body.days) {
-                const validation = this.validateGroupData(req.body);
-                if (!validation.isValid) {
-                    return res.status(400).json({ message: validation.error });
-                }
             }
 
             await groupRepository.update(id, req.body);

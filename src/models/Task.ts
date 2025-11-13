@@ -17,9 +17,6 @@ export class Task{
     @Column()
     status: string;
 
-    @Column()
-    isHabit: boolean;
-
     @Column({ type: "datetime",nullable: true})
     limitDate?: Date | null;
     
@@ -44,16 +41,14 @@ export class Task{
         title: string,
         topic: string,
         status: string,
-        isHabit: boolean,
         limitDate: Date,
         tasksLog: TaskLog[]
     ) {
         this.user = user
         this.group = group
         this.title = title
-        this.topic = topic
+        this.topic = topic || "outro"
         this.status = status
-        this.isHabit = isHabit
         this.limitDate = limitDate
         this.tasksLog = tasksLog
     }

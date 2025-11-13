@@ -83,7 +83,6 @@ export class TaskController implements IController {
      * Executa operação com tratamento de erro padrão
      */
     private async executeWithErrorHandling(res: Response, operation: () => Promise<Response>): Promise<Response> {
-        
         try {
             return await operation();
         } catch (error) {

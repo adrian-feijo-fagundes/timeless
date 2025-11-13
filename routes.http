@@ -34,10 +34,10 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-    "email": "pedro@usuario.com",
-    "name": "Pedro",
+    "email": "pedrinho@usuario.com",
+    "name": "Pedrinho",
     "password": "1234Aa!",
-    "birthday": "2000-06-12"
+    "birthday": "2015-06-12"
 }
 
 ###

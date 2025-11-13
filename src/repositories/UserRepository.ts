@@ -1,19 +1,7 @@
 import { User } from "../models/User";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../config/dataSource";
-
-// Interface para resposta do usuário (sem senha e métodos)
-export interface UserResponse {
-    id: number;
-    email: string;
-    name: string;
-    createdAt: Date;
-    birthday: Date;
-    tasks?: any[];
-    groups?: any[];
-    tasksLog?: any[];
-}
-
+import { UserResponse } from "../types/UserResponse";
 export class UserRepository {
     private repository: Repository<User>;
 
@@ -65,4 +53,5 @@ export class UserRepository {
     async findByEmail(email: string): Promise<User | null> {
         return this.repository.findOneBy({ email });
     }
+    
 }

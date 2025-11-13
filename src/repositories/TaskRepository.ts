@@ -172,10 +172,6 @@ export class TaskRepository {
             changes.push("Data alterada");
         }
         
-        if (data.isHabit !== undefined && data.isHabit !== task.isHabit) {
-            changes.push(data.isHabit ? "Tipo: Hábito" : "Tipo: Tarefa");
-        }
-
         return changes;
     }
 

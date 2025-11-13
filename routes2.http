@@ -1,3 +1,15 @@
 ###
 GET http://localhost:3000/group
-Authorization: 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYyMzg0MDUzLCJleHAiOjE3NjIzODc2NTN9.0cVC6WyEoTftGXtfuuUqv6NB9rHz2TIjmvFz-bflG0s
+
+
+###
+POST http://localhost:3000/group
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYyMzg0MDUzLCJleHAiOjE3NjIzODc2NTN9.0cVC6WyEoTftGXtfuuUqv6NB9rHz2TIjmvFz-bflG0s
+
+
+
+Content-Type: application/json
+
+{
+}

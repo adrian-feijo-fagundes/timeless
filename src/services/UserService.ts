@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs/umd/types";
+import bcrypt from "bcryptjs";
 import { generateToken } from "../config/auth";
 import { AppError, NotFoundError, UnauthorizedError } from "../errors";
 import { UserRepository } from "../repositories/UserRepository";

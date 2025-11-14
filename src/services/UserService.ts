@@ -11,11 +11,7 @@ import { validateId } from "../utils/validateId";
 const userRepository = new UserRepository()
 
 const MESSAGES = {
-    USER_NOT_FOUND: "Usuário não encontrado",
     INVALID_CREDENTIALS: "Credenciais inválidas",
-    INTERNAL_ERROR: "Erro interno do servidor",
-    INVALID_ID: "ID inválido",
-    LOGIN_SUCCESS: "Login realizado com sucesso",
     EMAIL_ALREADY_EXISTS: "Email já está em uso"
 };
 export class UserService {

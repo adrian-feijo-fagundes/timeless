@@ -1,6 +1,8 @@
 import { Group } from "../models/Group";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../config/dataSource";
+import { GroupResponse } from "../types/GroupResponse";
+import { UpdateGroupDTO } from "../dtos/groups/UpdateGroupDTO";
 
 export class GroupRepository {
     private repository: Repository<Group>;
@@ -9,9 +11,11 @@ export class GroupRepository {
         this.repository = AppDataSource.getRepository(Group);
     }
 
-    async create(data: Group): Promise<Group> {
-        const group = this.repository.create(data);
-        return await this.repository.save(group);
+    async create(userId: number, data: Group): Promise<GroupResponse> {
+        return await this.repository.save({
+            data,
+            user: { id: userId }
+        });
     }
 
     async findAll(): Promise<Group[]> {
@@ -35,7 +39,7 @@ export class GroupRepository {
         });
     }
 
-    async update(id: number, data: Partial<Group>): Promise<void> {
+    async update(id: number, data: UpdateGroupDTO): Promise<void> {
         await this.repository.update(id, data);
     }
 

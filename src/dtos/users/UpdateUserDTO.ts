@@ -27,6 +27,6 @@ export class UpdateUserDTO {
     @IsDate({ message: "Data de nascimento inválida" })
     @MaxDate(new Date(), { message: "A data de nascimento não pode ser no futuro" })
     @MinAge(MIN_AGE, { message: `O usuário deve ter pelo menos ${MIN_AGE} anos` })
-    birthday!: Date;
+    birthday?: Date;
 
 }

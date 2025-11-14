@@ -1,5 +1,6 @@
 import { Type } from "class-transformer"
-import { IsDate, IsNotEmpty, IsOptional, MaxLength, MinDate } from "class-validator"
+import { IsDate, IsNotEmpty, IsOptional, MaxLength, MinDate, Validate } from "class-validator"
+import { DateNotBeforeToday } from "../../decorators/DateNotBeforeToday"
 
 export class CreateTaskDTO {
     @IsNotEmpty({ message: "O título é obrigatório" })
@@ -15,6 +16,7 @@ export class CreateTaskDTO {
     @IsOptional()    
     @Type(() => Date)
     @IsDate({ message: "Data de vencimento da tarefa inválida" })
-    @MinDate(new Date(), { message: "A data não pode ser no passado" })
+    @Validate(DateNotBeforeToday, { message: "A data não pode ser no passado" })
     limitDate?: Date
+
 }

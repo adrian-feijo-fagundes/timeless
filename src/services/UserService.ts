@@ -22,7 +22,7 @@ export class UserService {
 
     async login(email: string, password: string) {
         const user = await userRepository.findByEmail(email);
-        if (!user) return new NotFoundError("Usuário não encontrado");
+        if (!user) throw new NotFoundError("Usuário não encontrado");
 
         const isValid = await bcrypt.compare(password, user.password );
         if (!isValid) {

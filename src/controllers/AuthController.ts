@@ -5,17 +5,19 @@ import { AppError } from "../errors";
 
 const userService = new UserService()
 export class AuthController extends RestController {
-    
-    async login(req: Request, res: Response): Promise<Response> {
+    constructor() {
+        super();
+    }
+
+    login = async (req: Request, res: Response): Promise<Response> => {
         return this.executeWithErrorHandling(res, async () => {
-            if (!req.user?.id) throw new AppError("Usuário não autenticado", 401);
             const { email, password } = req.body;
             const response = await userService.login(email, password)
             return res.status(200).json(response)
         })
     }
 
-    async profile(req: Request, res: Response): Promise<Response> {
+    profile = async (req: Request, res: Response): Promise<Response> => {
         return await this.executeWithErrorHandling(res, async () => {
             if (!req.user?.id) throw new AppError("Usuário não autenticado", 401);
             const id = req.user.id;

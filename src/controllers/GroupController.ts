@@ -13,9 +13,11 @@ const MESSAGES = {
 };
 
 export class GroupController extends RestController {
-    
+    constructor() {
+        super();
+    }
 
-    async create(req: Request, res: Response): Promise<Response> {
+    create = async (req: Request, res: Response): Promise<Response> => {
         try {
 
             // Criar grupo
@@ -32,7 +34,7 @@ export class GroupController extends RestController {
         }
     }
 
-    async list(req: Request, res: Response): Promise<Response> {
+    list = async (req: Request, res: Response): Promise<Response> => {
         try {
             const userId = req.user?.id;
             if (!userId) {
@@ -47,7 +49,7 @@ export class GroupController extends RestController {
         }
     }
 
-    async getById(req: Request, res: Response): Promise<Response> {
+    getById = async(req: Request, res: Response): Promise<Response> => {
         try {
             const id = Number(req.params.id);
             
@@ -72,7 +74,7 @@ export class GroupController extends RestController {
         }
     }
 
-    async update(req: Request, res: Response): Promise<Response> {
+    update = async(req: Request, res: Response): Promise<Response> => {
         try {
             const id = Number(req.params.id);
             
@@ -98,7 +100,7 @@ export class GroupController extends RestController {
         }
     }
 
-    async delete(req: Request, res: Response): Promise<Response> {
+    delete = async (req: Request, res: Response): Promise<Response> => {
         try {
             const id = Number(req.params.id);
             

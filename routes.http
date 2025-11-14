@@ -34,10 +34,10 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-    "email": "pedrinho@usuario.com",
+    "email": "pedrinh@usuario.com",
     "name": "Pedrinho",
     "password": "1234Aa!",
-    "birthday": "2015-06-12"
+    "birthday": "2006-06-12"
 }
 
 ###
@@ -47,8 +47,8 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "usuario2@usuario.com",
-    "password": "1234"
+    "email": "adria@gmail.com",
+    "password": "4321Aa!"
 }
 
 ###
@@ -57,19 +57,20 @@ Content-Type: application/json
 
 # Listar todos os usuários (GET) - COM TOKEN
 GET http://localhost:3000/users/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYyMzg0MDUzLCJleHAiOjE3NjIzODc2NTN9.0cVC6WyEoTftGXtfuuUqv6NB9rHz2TIjmvFz-bflG0s
+Authorization: Bearer 
 
 ###
 
-GET http://localhost:3000/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYyMzg0MDUzLCJleHAiOjE3NjIzODc2NTN9.0cVC6WyEoTftGXtfuuUqv6NB9rHz2TIjmvFz-bflG0s
+GET http://localhost:3000/users/11
+//DELETE http://localhost:3000/users/12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsImVtYWlsIjoicGVkcmluaEB1c3VhcmlvLmNvbSIsImlhdCI6MTc2MzA4NzE5MSwiZXhwIjoxNzYzMDkwNzkxfQ.RFMX5nUmnrYDVzFIRWEWsn1DcNcK9TDKZCYZB1_O2-w
 ###
-PUT http://localhost:3000/users/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c3VhcmlvQHVzdWFyaW8uY29tIiwiaWF0IjoxNzYyMzg0MDUzLCJleHAiOjE3NjIzODc2NTN9.0cVC6WyEoTftGXtfuuUqv6NB9rHz2TIjmvFz-bflG0s
+PUT http://localhost:3000/users/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsImVtYWlsIjoicGVkcmluaEB1c3VhcmlvLmNvbSIsImlhdCI6MTc2MzA4NzE5MSwiZXhwIjoxNzYzMDkwNzkxfQ.RFMX5nUmnrYDVzFIRWEWsn1DcNcK9TDKZCYZB1_O2-w
 Content-Type: application/json
 
 {
-    "name": "adrian"
+    "password": "4321Aa!"
 }
 
 ###

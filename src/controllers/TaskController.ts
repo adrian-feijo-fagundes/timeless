@@ -21,7 +21,9 @@ const MESSAGES = {
 const VALID_STATUSES = ['pendente', 'em_andamento', 'concluída'];
 
 export class TaskController extends RestController {
-    
+    constructor() {
+        super();
+    }
     /**
      * Valida dados básicos da tarefa
      */

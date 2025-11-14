@@ -1,4 +1,4 @@
-import { NotFoundError }  from "../errors";
+import { AppError, NotFoundError }  from "../errors";
 import { UserRepository } from "../repositories/UserRepository";
 
 const userRepository = new UserRepository()

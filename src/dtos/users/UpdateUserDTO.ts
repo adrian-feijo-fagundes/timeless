@@ -20,7 +20,7 @@ export class UpdateUserDTO {
     @Matches(/(?=.*[A-Z])/, { message: "Senha deve conter pelo menos uma letra maiúscula" })
     @Matches(/(?=.*\d)/, { message: "Senha deve conter pelo menos um número" })
     @Matches(/(?=.*[@$!%*?&])/, { message: "Senha deve conter pelo menos um caractere especial (@$!%*?&)" })
-    password!: string;
+    password?: string;
     
     @IsOptional()
     @Type(() => Date)

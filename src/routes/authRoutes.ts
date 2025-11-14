@@ -6,6 +6,6 @@ const authRouter = Router();
 const authController = new AuthController()
 const authMiddleware = new AuthMiddleware()
 authRouter.post("/login", authController.login);
-authRouter.get("/me", authMiddleware.authenticateToken, authController.me);
+authRouter.get("/profile", authMiddleware.authenticateToken, authController.profile);
 
 export default authRouter;

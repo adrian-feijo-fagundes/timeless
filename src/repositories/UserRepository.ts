@@ -41,8 +41,15 @@ export class UserRepository {
         return user ? this.removePassword(user) : null;
     }
 
-    async update(id: number, data: User): Promise<void> {
-        await this.repository.update(id, data);
+    async update(id: number, data: User): Promise<User> {
+        const user = await this.repository.findOne({ where: { id } });
+
+        if (!user) {
+            throw new Error("UserNotFound");
+        }
+
+        Object.assign(user, data);
+        return await this.repository.save(user);
     }
 
     async delete(id: number): Promise<void> {

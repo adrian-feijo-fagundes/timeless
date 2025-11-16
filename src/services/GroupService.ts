@@ -36,8 +36,10 @@ export class GroupService {
     update = async (userId: number, id: number, data: UpdateGroupDTO) => {
         validateId(userId)
         validateId(id)
-        await UserUtils.findUser(userId)
-        const group = await GroupService.findGroup(id)
+        const [group] = await Promise.all([
+            GroupService.findGroup(id),
+            UserUtils.findUser(userId)
+        ])
         await GroupService.CheckOwnership(group.user.id, userId)
         await groupRepository.update(id, data)
     }
@@ -51,16 +53,20 @@ export class GroupService {
     delete = async (userId: number, id: number) => {
         validateId(userId)
         validateId(id)
-        await UserUtils.findUser(userId)
-        const group = await GroupService.findGroup(id)
+        const [group] = await Promise.all([
+            GroupService.findGroup(id),
+            UserUtils.findUser(userId)
+        ])
         await GroupService.CheckOwnership(group.user.id, userId)
         await groupRepository.delete(id)
     }
     
     getById = async (userId: number, id: number) => { 
         validateId(userId)
-        await UserUtils.findUser(userId)
-        const group = await GroupService.findGroup(id);
+        const [group] = await Promise.all([
+            GroupService.findGroup(id),
+            UserUtils.findUser(userId)
+        ])
         await GroupService.CheckOwnership(group.user.id, userId)
         return group
     }

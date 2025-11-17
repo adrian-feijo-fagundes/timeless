@@ -11,7 +11,7 @@ import { validateId } from "../utils/validateId";
 const userRepository = new UserRepository()
 
 const MESSAGES = {
-    INVALID_CREDENTIALS: "Credenciais inválidas",
+    INVALID_CREDENTIALS: "Não foi possível fazer login. Verifique sua senha.",
     EMAIL_ALREADY_EXISTS: "Email já está em uso"
 };
 export class UserService {

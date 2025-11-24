@@ -25,4 +25,11 @@ export class AuthController extends RestController {
             return res.status(200).json(user)
         })
     }
+
+    delete = async (req: Request, res: Response): Promise<Response> =>{
+        return await this.executeWithErrorHandling(res, async () => {
+            await userService.delete(req.user?.id)
+            return res.status(204).send();
+        })
+    }
 }

@@ -16,7 +16,5 @@ userRoutes.post('/register',validateDto(CreateUserDTO), userController.create); 
 // ========== ROTAS PROTEGIDAS (com JWT) ==========
 userRoutes.get('/users', authMiddleware.authenticateToken, userController.list);
 userRoutes.get('/users/:id', authMiddleware.authenticateToken, userController.getById);
-userRoutes.put('/users/:id', authMiddleware.authenticateToken, validateDto(UpdateUserDTO), userController.update);
-userRoutes.delete('/users/:id', authMiddleware.authenticateToken, userController.delete);
-
+userRoutes.put('/users', authMiddleware.authenticateToken, validateDto(UpdateUserDTO), userController.update);
 export default userRoutes;

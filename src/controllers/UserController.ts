@@ -35,17 +35,9 @@ export class UserController extends RestController {
 
     update = async (req: Request, res: Response): Promise<Response> => {
         return await this.executeWithErrorHandling(res, async () => {
-            const id = Number(req.params.id);
+            const id = Number(req.user.id);
             const user = await userService.update(id, req.body);
             return res.status(200).json(user);
-        })
-    }
-
-    delete = async (req: Request, res: Response): Promise<Response> =>{
-        return await this.executeWithErrorHandling(res, async () => {
-            const id = Number(req.params.id);
-            await userService.delete(id)
-            return res.status(204).send();
         })
     }
 }

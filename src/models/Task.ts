@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 import { Group } from "./Group";
 import { TaskLog } from "./TaskLog";
@@ -22,6 +22,10 @@ export class Task{
     
     @CreateDateColumn()
     createdAt!: Date;
+
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
     
     @Column({ type: "datetime",nullable: true})
     completedAt?: Date;

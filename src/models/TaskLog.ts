@@ -1,4 +1,4 @@
-import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Column } from "typeorm";
+import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Column, UpdateDateColumn } from "typeorm";
 import { Task } from "./Task";
 import { User } from "./User";
 
@@ -18,6 +18,9 @@ export class TaskLog {
 
     @CreateDateColumn()
     createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
         
     constructor(
         user: User,

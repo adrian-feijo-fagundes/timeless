@@ -22,6 +22,9 @@ export class Group {
     @CreateDateColumn()
     createdAt!: Date;
 
+    @UpdateDateColumn()
+    updatedAt!: Date;
+    
     @OneToMany(() => Task, task => task.group)
     tasks!: Task[];
 

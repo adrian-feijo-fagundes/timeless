@@ -8,6 +8,7 @@ import {
     BeforeInsert,
     BeforeUpdate,
     AfterLoad,
+    UpdateDateColumn,
 } from "typeorm";
 import { Task } from "./Task";
 import { Group } from "./Group";
@@ -29,6 +30,9 @@ export class User {
 
     @CreateDateColumn()
     createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;    
 
     @Column()
     birthday: Date;

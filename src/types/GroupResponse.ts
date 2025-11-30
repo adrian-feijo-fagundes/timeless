@@ -1,9 +1,10 @@
 export interface GroupResponse {
     id: number;
     title: string;
-    description?: string
-    createdAt: Date;
+    description: string;
     maxTasksPerDay: number;
-    userId?: number
-    tasks?: any[]
+    days: number[];
+    createdAt: Date;
+    updatedAt: Date;
+//    tasks: TaskResponse[];
 }

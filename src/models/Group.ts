@@ -1,8 +1,17 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn
+} from "typeorm";
+
 import { Task } from "./Task";
 import { User } from "./User";
 
-@Entity("groups") 
+@Entity("groups")
 export class Group {
     @PrimaryGeneratedColumn()
     id!: number;
@@ -16,7 +25,7 @@ export class Group {
     @Column({ default: 2 })
     maxTasksPerDay: number;
 
-    @Column("json")
+    @Column("json", { default: [] })
     days: number[];
 
     @CreateDateColumn()
@@ -24,11 +33,11 @@ export class Group {
 
     @UpdateDateColumn()
     updatedAt!: Date;
-    
+
     @OneToMany(() => Task, task => task.group)
     tasks!: Task[];
 
-    @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE"})
+    @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE" })
     user: User;
 
     constructor(
@@ -40,8 +49,8 @@ export class Group {
     ) {
         this.title = title;
         this.user = user;
-        this.days = days ?? [1, 2, 3, 4, 5]; // Segunda a sexta por padrão
+        this.days = days ?? [];
         this.description = description ?? '';
-        this.maxTasksPerDay = maxTasksPerDay ?? 2; // 10 tarefas por dia    
+        this.maxTasksPerDay = maxTasksPerDay ?? 2;
     }
 }

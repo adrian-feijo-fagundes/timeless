@@ -9,9 +9,8 @@ export class CreateGroupDTO {
     @IsString({ message: "A descrição deve ser uma string" })
     description?: string;
 
-    @IsOptional()  
+    @IsOptional()
     @IsArray({ message: "Os dias devem ser um array" })
-    @ArrayNotEmpty({ message: "O grupo deve conter ao menos um dia" })
     @ArrayUnique({ message: "Os dias não podem se repetir" })
     @IsInt({ each: true, message: "Cada dia deve ser um número inteiro" })
     @Min(0, { each: true, message: "Os dias devem estar entre 0 e 6" })

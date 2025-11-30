@@ -30,6 +30,9 @@ export class Task{
     @Column({ type: "datetime",nullable: true})
     completedAt?: Date;
 
+    @Column({ type: "boolean", default: false })
+    completedLate?: boolean;
+
     @ManyToOne(() => User, user => user.tasks, { onDelete: "CASCADE"})
     user: User;
 

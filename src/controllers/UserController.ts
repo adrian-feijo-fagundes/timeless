@@ -10,13 +10,6 @@ export class UserController extends RestController {
     constructor() {
         super();
     }
-    create = async (req: Request, res: Response): Promise<Response> => {
-        return await this.executeWithErrorHandling(res, async () => {
-            const user = await userService.register(req.body);
-            return res.status(201).json(user);
-        })
-    }
-
     list = async (req: Request, res: Response): Promise<Response> => {
         return await this.executeWithErrorHandling(res, async () => {    
             const users = await userService.findAll();

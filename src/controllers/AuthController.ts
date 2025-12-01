@@ -9,6 +9,13 @@ export class AuthController extends RestController {
         super();
     }
 
+    register = async (req: Request, res: Response): Promise<Response> => {
+            return await this.executeWithErrorHandling(res, async () => {
+                const user = await userService.register(req.body);
+                return res.status(201).json(user);
+            })
+    }
+    
     login = async (req: Request, res: Response): Promise<Response> => {
         return this.executeWithErrorHandling(res, async () => {
             const { email, password } = req.body;

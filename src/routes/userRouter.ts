@@ -11,7 +11,6 @@ const authMiddleware = new AuthMiddleware();
 const userRoutes = Router();
 
 // ========== ROTAS PÚBLICAS (sem JWT) ==========
-userRoutes.post('/register',validateDto(CreateUserDTO), userController.create); // Registro
 
 // ========== ROTAS PROTEGIDAS (com JWT) ==========
 userRoutes.get('/users', authMiddleware.authenticateToken, userController.list);

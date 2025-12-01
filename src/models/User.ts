@@ -13,6 +13,7 @@ import {
 import { Task } from "./Task";
 import { Group } from "./Group";
 import { TaskLog } from "./TaskLog";
+import { Habit } from "./Habit";
 
 @Entity("users")
 export class User {
@@ -40,6 +41,10 @@ export class User {
 
     @OneToMany(() => Task, task => task.user)
     tasks?: Task[];
+
+
+    @OneToMany(() => Habit, habit => habit.user)
+    habits?: Habit[];
 
     @OneToMany(() => Group, group => group.user)
     groups?: Group[];

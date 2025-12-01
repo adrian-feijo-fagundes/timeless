@@ -10,6 +10,7 @@ import {
 
 import { Task } from "./Task";
 import { User } from "./User";
+import { Habit } from "./Habit";
 
 @Entity("groups")
 export class Group {
@@ -25,8 +26,8 @@ export class Group {
     @Column({ default: 2 })
     maxTasksPerDay: number;
 
-    @Column("json", { default: [] })
-    days: number[];
+    @Column("json", { nullable: false })
+    days: number[] = [];
 
     @CreateDateColumn()
     createdAt!: Date;
@@ -36,6 +37,9 @@ export class Group {
 
     @OneToMany(() => Task, task => task.group)
     tasks!: Task[];
+
+    @OneToMany(() => Habit, task => task.group)
+    habits!: Habit[];
 
     @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE" })
     user: User;

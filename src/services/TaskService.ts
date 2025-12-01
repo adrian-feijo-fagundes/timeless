@@ -83,4 +83,27 @@ export class TaskService {
 
         await taskRepository.delete(taskId);
     }
+    
+    async findByGroup(userId: number, groupId: number): Promise<TaskResponseDTO[]> {
+        validateId(groupId);
+    
+        // valida se o usuário existe
+        await UserUtils.findUser(userId);
+    
+        // valida se o grupo existe
+        const group = await groupRepository.findById(groupId);
+        if (!group) {
+            throw new NotFoundError("Grupo não encontrado");
+        }
+    
+        // verifica se o grupo pertence ao usuário
+        if (group.user.id !== userId) {
+            throw new NotFoundError("Grupo não encontrado");
+        }
+    
+        const tasks = await taskRepository.findByGroup(groupId);
+    
+        return tasks.map(TaskResponseDTO.fromEntity);
+    }
+    
 }

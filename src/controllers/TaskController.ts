@@ -55,4 +55,15 @@ export class TaskController extends RestController {
             return res.status(204).json();
         });
     };
+
+    findByGroup = async (req: Request, res: Response): Promise<Response> => {
+        return this.executeWithErrorHandling(res, async () => {
+            const userId = req.user.id;
+            const groupId = Number(req.params.groupId);
+    
+            const tasks = await taskService.findByGroup(userId, groupId);
+            return res.status(200).json(tasks);
+        });
+    };
+    
 }

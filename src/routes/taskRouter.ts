@@ -13,6 +13,7 @@ taskRoutes.use(authMiddleware.authenticateToken);
 // Rotas CRUD
 taskRoutes.post('/task', taskController.create);
 taskRoutes.get('/task', taskController.list);
+taskRoutes.get('group/:id/task', taskController.findByGroup);
 taskRoutes.get('/task/:id', taskController.getById);
 taskRoutes.put('/task/:id', taskController.update);
 taskRoutes.delete('/task/:id', taskController.delete);

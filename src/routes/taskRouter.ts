@@ -16,10 +16,6 @@ taskRoutes.get('/task', taskController.list);
 taskRoutes.get('/task/:id', taskController.getById);
 taskRoutes.put('/task/:id', taskController.update);
 taskRoutes.delete('/task/:id', taskController.delete);
-
 // Rotas específicas para tarefas
-taskRoutes.patch('/task/:id/complete', taskController.complete);
-taskRoutes.patch('/task/:id/reschedule', taskController.reschedule);
-taskRoutes.get('/task/stats', taskController.getStats);
 
 export default taskRoutes; 

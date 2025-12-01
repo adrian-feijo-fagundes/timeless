@@ -13,7 +13,30 @@
 - Revisar se está tudo ok
 - Criar um grupo automaticamente quando a conta for criada
 ### CRUD Tarefas
-- Refatorar controller
+
+- repository
+    - procurar todas tarefas de um usuário
+    - procurar todas tarefas de um grupo
+    - procurar pelo id
+    - update
+    - delete
+    - patch (update parcial)
+- service
+    - completar tarefa
+    - logica completedLate
+    - agendamento/distribuição de tarefas (estou pensando em criar service especifico para isso)
+- controller
+- dtos
+- routes
+  - fazer estilo profile/tasks, profile/group/task
+
+### CRUD Hábitos
+- model
+- repository
+- service
+- controller
+- routes
+
 ### Distribuição de tarefas automático
 - Integração com o backend e a rotas
 ### Gameficação
@@ -31,3 +54,18 @@
 - Modal Criação Grupos atualizado
 - Modal atualizar dados dos grupos
 - Modal atualizar dados das tarefas
+
+
+
+## Rotas
+
+/login
+/profile
+/profile/delete
+
+post     /group 
+get      /group
+get      /group/:id
+put      /group/:id
+delete   /group/:id
+

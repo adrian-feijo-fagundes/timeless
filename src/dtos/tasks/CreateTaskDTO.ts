@@ -1,14 +1,21 @@
 import { Type } from "class-transformer"
-import { IsDate, IsNotEmpty, IsOptional, MaxLength, MinDate, Validate } from "class-validator"
+import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinDate, Validate } from "class-validator"
 import { DateNotBeforeToday } from "../../decorators/DateNotBeforeToday"
 
 export class CreateTaskDTO {
     @IsNotEmpty({ message: "O título é obrigatório" })
     @MaxLength(50, { message: "Titulo deve ter no máximo 50 caracteres" })
+    @IsString()
     title!: string
     
     @IsOptional()
-    topic?: string
+    @IsString()
+    topic?: string = "Other";
+
+
+    @IsNotEmpty()
+    @IsString()
+    status?: string;
 
     @IsOptional()
     description?: string
@@ -18,5 +25,11 @@ export class CreateTaskDTO {
     @IsDate({ message: "Data de vencimento da tarefa inválida" })
     @Validate(DateNotBeforeToday, { message: "A data não pode ser no passado" })
     limitDate?: Date
+
+
+
+    @IsNumber()
+    @IsNotEmpty({ message: "O id do grupo é obrigatório"})
+    groupId!: number;
 
 }

@@ -1,10 +1,11 @@
-import * as bcrypt from "bcryptjs"; // Importando o bcryptjs para o hash da senha
+import * as bcrypt from "bcryptjs";
 import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
     OneToMany,
+    OneToOne,
     BeforeInsert,
     BeforeUpdate,
     AfterLoad,
@@ -14,6 +15,7 @@ import { Task } from "./Task";
 import { Group } from "./Group";
 import { TaskLog } from "./TaskLog";
 import { Habit } from "./Habit";
+import { Gamification } from "./Gamification";
 
 @Entity("users")
 export class User {
@@ -53,22 +55,25 @@ export class User {
     @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
     tasksLog?: TaskLog[];
 
+    @OneToOne(() => Gamification, gamification => gamification.user)
+    gamification?: Gamification;
+
     previousPassword!: string;
 
-    @BeforeInsert() // Antes de inserir um novo usuário
-    @BeforeUpdate() // Antes de atualizar um usuário existente
+    // criptografa a senha antes de salvar no banco de dados
+    @BeforeInsert()
+    @BeforeUpdate()
     async hashPassword() {
-        // Verifica se a senha foi alterada, para não fazer hash desnecessariamente
+        // só faz hash se a senha foi alterada para evitar processamento desnecessário
         if (this.password && this.password !== this.previousPassword) {
-            const salt = await bcrypt.genSalt(10); // Gera um 'salt' com 10 rounds, o salt é uma string aleatória que irá aumentar a segurança do hash
-            this.password = await bcrypt.hash(this.password, salt); // Faz o hash da senha com o salt gerado
+            const salt = await bcrypt.genSalt(10);
+            this.password = await bcrypt.hash(this.password, salt);
         }
     }
 
-    // Hook AfterLoad: Este hook é chamado depois de carregar o usuário do banco
+    // salva a senha atual para comparar em futuras atualizações
     @AfterLoad()
     setPreviousPassword() {
-        // Aqui estamos salvando a senha original para comparar em futuras atualizações
         this.previousPassword = this.password;
     }
 

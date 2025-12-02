@@ -106,5 +106,15 @@
 | **GET**    | `/task/:id`       | Buscar tarefa por ID                  | `taskController.getById`     |
 | **PUT**    | `/task/:id`       | Atualizar tarefa por ID               | `taskController.update`      |
 | **DELETE** | `/task/:id`       | Deletar tarefa por ID                 | `taskController.delete`      |
+| **PATCH**  | `/task/:id/complete` | Completar tarefa e processar gamificação | `taskController.complete` |
+
+## 🎮 **Gamification Routes**
+
+### 🔐 **Rotas Protegidas**
+
+| Método  | Rota                        | Descrição                                    | Controller / Função                |
+| ------- | --------------------------- | -------------------------------------------- | ---------------------------------- |
+| **GET** | `/gamification`            | Obter dados completos de gamificação         | `gamificationController.getData`  |
+| **GET** | `/gamification/achievements` | Listar todas as conquistas do usuário      | `gamificationController.getAchievements` |
 
 ## Observações

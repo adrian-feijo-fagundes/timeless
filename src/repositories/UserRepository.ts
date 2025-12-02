@@ -9,9 +9,7 @@ export class UserRepository {
         this.repository = AppDataSource.getRepository(User);
     }
 
-    /**
-     * Remove a senha do objeto usuário
-     */
+    // remove a senha do objeto antes de retornar para o cliente
     private removePassword(user: User): UserResponse {
         return {
             id: user.id,
@@ -56,9 +54,14 @@ export class UserRepository {
         await this.repository.delete(id);
     }
 
-    // Método para autenticação (retorna com senha)
+    // busca usuário por email incluindo a senha (usado na autenticação)
     async findByEmail(email: string): Promise<User | null> {
         return this.repository.findOneBy({ email });
+    }
+
+    // busca o usuário completo por ID incluindo a senha (usado internamente)
+    async findFullUserById(id: number): Promise<User | null> {
+        return this.repository.findOne({ where: { id } });
     }
     
 }

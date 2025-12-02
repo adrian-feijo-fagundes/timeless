@@ -9,10 +9,6 @@ export class TaskRepository {
         this.repo = AppDataSource.getRepository(Task);
     }
 
-    // ============================
-    // CRUD BÁSICO
-    // ============================
-
     async createTask(data: Partial<Task>): Promise<Task> {
         const task = this.repo.create(data);
         return await this.repo.save(task);
@@ -33,11 +29,7 @@ export class TaskRepository {
         await this.repo.delete(id);
     }
 
-    // ============================
-    // QUERIES ÚTEIS
-    // ============================
-
-    /** Todas as tasks de um usuário */
+    // retorna todas as tarefas de um usuário específico
     async findByUser(userId: number): Promise<Task[]> {
         return await this.repo.find({
             where: { user: { id: userId } },
@@ -45,7 +37,7 @@ export class TaskRepository {
         });
     }
 
-    /** Todas as tasks de um grupo */
+    // retorna todas as tarefas de um grupo específico
     async findByGroup(groupId: number): Promise<Task[]> {
         return await this.repo.find({
             where: { group: { id: groupId } },
@@ -53,14 +45,14 @@ export class TaskRepository {
         });
     }
 
-    
-    /** Atualizar status + completedAt + completedLate */
+    // marca uma tarefa como completada e verifica se foi feita com atraso
     async markAsCompleted(taskId: number): Promise<Task | null> {
         const task = await this.findById(taskId);
         if (!task) return null;
 
         task.completedAt = new Date();
 
+        // verifica se a tarefa foi completada após a data limite
         if (task.limitDate && task.completedAt > task.limitDate) {
             task.completedLate = true;
         }

@@ -65,5 +65,15 @@ export class TaskController extends RestController {
             return res.status(200).json(tasks);
         });
     };
+
+    complete = async (req: Request, res: Response): Promise<Response> => {
+        return this.executeWithErrorHandling(res, async () => {
+            const userId = req.user.id;
+            const taskId = Number(req.params.id);
+
+            const result = await taskService.completeTask(userId, taskId);
+            return res.status(200).json(result);
+        });
+    };
     
 }

@@ -6,17 +6,17 @@ import { UserUtils } from "../utils/UserUtils";
 import { GroupRepository } from "../repositories/GroupRepository";
 import { CreateTaskDTO } from "../dtos/tasks/CreateTaskDTO";
 import { UpdateTaskDTO } from "../dtos/tasks/UpdateTaskDTO";
+import { GamificationService } from "./GamificationService";
 
 const taskRepository = new TaskRepository();
 const groupRepository = new GroupRepository();
+const gamificationService = new GamificationService();
 
 export class TaskService {
 
     async create(userId: number, data: CreateTaskDTO): Promise<TaskResponseDTO> {
-        // garantir que o user existe
         await UserUtils.findUser(userId);
 
-        // garantir que o grupo existe para esse user
         const group = await groupRepository.findById(data.groupId);
         if (!group) {
             throw new NotFoundError("Grupo não encontrado");
@@ -27,6 +27,9 @@ export class TaskService {
             user: { id: userId } as any,
             group
         });
+
+        // atualiza o contador de tarefas criadas na gamificação
+        await gamificationService.incrementTasksCreated(userId);
 
         return TaskResponseDTO.fromEntity(task);
     }
@@ -59,7 +62,7 @@ export class TaskService {
             throw new NotFoundError("Tarefa não encontrada");
         }
 
-        // se quiser alterar o grupo
+        // atualiza o grupo da tarefa se um novo grupo foi informado
         if (data.groupId) {
             const group = await groupRepository.findById(data.groupId);
             if (!group) throw new NotFoundError("Grupo não encontrado");
@@ -86,24 +89,58 @@ export class TaskService {
     
     async findByGroup(userId: number, groupId: number): Promise<TaskResponseDTO[]> {
         validateId(groupId);
-    
-        // valida se o usuário existe
         await UserUtils.findUser(userId);
     
-        // valida se o grupo existe
         const group = await groupRepository.findById(groupId);
         if (!group) {
             throw new NotFoundError("Grupo não encontrado");
         }
     
-        // verifica se o grupo pertence ao usuário
+        // verifica se o grupo pertence ao usuário antes de retornar as tarefas
         if (group.user.id !== userId) {
             throw new NotFoundError("Grupo não encontrado");
         }
     
         const tasks = await taskRepository.findByGroup(groupId);
-    
         return tasks.map(TaskResponseDTO.fromEntity);
+    }
+
+    // marca uma tarefa como completada e processa todos os aspectos da gamificação
+    async completeTask(userId: number, taskId: number): Promise<{
+        task: TaskResponseDTO;
+        gamification: {
+            xpGained: number;
+            leveledUp: boolean;
+            newLevel?: number;
+            rewardXp?: number;
+            streak: number;
+            isNewStreakRecord: boolean;
+        };
+    }> {
+        validateId(taskId);
+        await UserUtils.findUser(userId);
+
+        const task = await taskRepository.findById(taskId);
+        if (!task || task.user.id !== userId) {
+            throw new NotFoundError("Tarefa não encontrada");
+        }
+
+        if (task.status === "completed") {
+            throw new NotFoundError("Tarefa já está completada");
+        }
+
+        const completedTask = await taskRepository.markAsCompleted(taskId);
+        if (!completedTask) {
+            throw new NotFoundError("Erro ao completar tarefa");
+        }
+
+        // processa XP, streak e conquistas relacionadas à tarefa completada
+        const gamificationResult = await gamificationService.onTaskCompleted(userId);
+
+        return {
+            task: TaskResponseDTO.fromEntity(completedTask),
+            gamification: gamificationResult
+        };
     }
     
 }

@@ -24,15 +24,6 @@ export class Task{
     createdAt!: Date;
 
 
-    @UpdateDateColumn()
-    updatedAt!: Date;
-    
-    @Column({ type: "datetime",nullable: true})
-    completedAt?: Date;
-
-    @Column({ type: "boolean", default: false })
-    completedLate?: boolean;
-
     @ManyToOne(() => User, user => user.tasks, { onDelete: "CASCADE"})
     user: User;
 
@@ -41,6 +32,15 @@ export class Task{
 
     @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
     tasksLog?: TaskLog[];
+    
+    @UpdateDateColumn()
+    updatedAt!: Date;
+    
+    @Column({ type: "datetime",nullable: true})
+    completedAt?: Date;
+
+    @Column({ type: "boolean", default: false })
+    completedLate?: boolean;
     
     constructor(
         user: User, 

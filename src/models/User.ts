@@ -22,6 +22,23 @@ export class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @OneToMany(() => Task, task => task.user)
+    tasks?: Task[];
+
+
+    @OneToMany(() => Habit, habit => habit.user)
+    habits?: Habit[];
+
+    @OneToMany(() => Group, group => group.user)
+    groups?: Group[];
+
+
+    @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
+    tasksLog?: TaskLog[];
+
+    @OneToOne(() => Gamification, gamification => gamification.user)
+    gamification?: Gamification;
+
     @Column({ unique: true })
     email: string;
 
@@ -41,22 +58,6 @@ export class User {
     birthday: Date;
 
 
-    @OneToMany(() => Task, task => task.user)
-    tasks?: Task[];
-
-
-    @OneToMany(() => Habit, habit => habit.user)
-    habits?: Habit[];
-
-    @OneToMany(() => Group, group => group.user)
-    groups?: Group[];
-
-
-    @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
-    tasksLog?: TaskLog[];
-
-    @OneToOne(() => Gamification, gamification => gamification.user)
-    gamification?: Gamification;
 
     previousPassword!: string;
 

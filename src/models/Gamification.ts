@@ -20,6 +20,10 @@ export class Gamification {
     @OneToOne(() => User, user => user.gamification, { onDelete: "CASCADE" })
     @JoinColumn()
     user!: User;
+    
+    // lista de todas as conquistas desbloqueadas pelo usuário
+    @OneToMany(() => Achievement, achievement => achievement.gamification)
+    achievements?: Achievement[];
 
     // pontos de experiência acumulados pelo usuário
     @Column({ type: "int", default: 0 })
@@ -45,9 +49,6 @@ export class Gamification {
     @Column({ type: "int", default: 0 })
     totalTasksCreated!: number;
 
-    // lista de todas as conquistas desbloqueadas pelo usuário
-    @OneToMany(() => Achievement, achievement => achievement.gamification)
-    achievements?: Achievement[];
 
     @CreateDateColumn()
     createdAt!: Date;

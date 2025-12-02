@@ -14,13 +14,6 @@ const LEVEL_UP_BONUS_XP = 50; // XP extra recebido ao subir de nível
 
 export class GamificationService {
 
-// valores base do sistema de gamificação
-const XP_PER_TASK = 10; // XP ganho ao completar uma tarefa
-const XP_PER_LEVEL = 100; // XP base necessário por nível (multiplicado pelo nível atual)
-const LEVEL_UP_BONUS_XP = 50; // XP extra recebido ao subir de nível
-
-export class GamificationService {
-
     // busca a gamificação do usuário ou cria uma nova se não existir
     async getOrCreateGamification(userId: number): Promise<Gamification> {
         let gamification = await gamificationRepository.findByUserId(userId);

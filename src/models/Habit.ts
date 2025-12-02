@@ -8,6 +8,15 @@ export class Habit{
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @ManyToOne(() => User, user => user.habits, { onDelete: "CASCADE"})
+    user: User;
+
+    @ManyToOne(() => Group, group => group.habits)
+    group: Group;
+
+    @OneToMany(() => HabitCompletion, completion => completion.habit)
+    completions!: HabitCompletion[];
+
     @Column()
     title: string;
 
@@ -20,11 +29,6 @@ export class Habit{
     @UpdateDateColumn()
     updatedAt!: Date;
 
-    @ManyToOne(() => User, user => user.habits, { onDelete: "CASCADE"})
-    user: User;
-
-    @ManyToOne(() => Group, group => group.habits)
-    group: Group;
 
     @Column({ type: "int", default: 0 })
     current_streak?: number;
@@ -35,8 +39,6 @@ export class Habit{
     @Column({ type: "date", nullable: true })
     last_completed_at?: Date;
 
-    @OneToMany(() => HabitCompletion, completion => completion.habit)
-    completions!: HabitCompletion[];
     
     constructor(
         user: User, 

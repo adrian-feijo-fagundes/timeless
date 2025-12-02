@@ -17,6 +17,15 @@ export class Group {
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @OneToMany(() => Task, task => task.group)
+    tasks!: Task[];
+
+    @OneToMany(() => Habit, task => task.group)
+    habits!: Habit[];
+
+    @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE" })
+    user: User;
+
     @Column()
     title: string;
 
@@ -35,14 +44,6 @@ export class Group {
     @UpdateDateColumn()
     updatedAt!: Date;
 
-    @OneToMany(() => Task, task => task.group)
-    tasks!: Task[];
-
-    @OneToMany(() => Habit, task => task.group)
-    habits!: Habit[];
-
-    @ManyToOne(() => User, user => user.groups, { onDelete: "CASCADE" })
-    user: User;
 
     constructor(
         title: string,

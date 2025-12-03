@@ -7,39 +7,6 @@
 ![alt text](./docs/assets/banco-de-dados.png)
 
 ## Backend
-### CRUD Usuários
-### CRUD Grupos
-
-- Revisar se está tudo ok
-- Criar um grupo automaticamente quando a conta for criada
-### CRUD Tarefas
-
-
-- service
-    - completar tarefa
-    - logica completedLate
-    - agendamento/distribuição de tarefas (estou pensando em criar service especifico para isso)
-- controller
-- dtos
-- routes
-  
-
-### CRUD Hábitos
-- model
-- repository
-- service
-- controller
-- routes
-
-### Distribuição de tarefas automático
-- Integração com o backend e a rotas
-### Gameficação
-
-- Streak de Tarefas (dias seguidos realizando uma tarefa)
-- Tarefas completadas
-- Total de tarefas criadas
-- Tabela especifica para gameficação
-
 ## Frontend
 
 ### Atualizar Senha

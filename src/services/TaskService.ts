@@ -142,5 +142,4 @@ export class TaskService {
             gamification: gamificationResult
         };
     }
-    
 }

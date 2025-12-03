@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../config/auth";
 import { AppError, NotFoundError, UnauthorizedError } from "../errors";
 import { UserRepository } from "../repositories/UserRepository";
-import { UserResponse } from "../types/UserResponse";
+import { UserResponse } from "../dtos/users/UserResponse";
 import { UserUtils } from "../utils/UserUtils";
 import { UpdateUserDTO } from "../dtos/users/UpdateUserDTO";
 import { User } from "../models/User";

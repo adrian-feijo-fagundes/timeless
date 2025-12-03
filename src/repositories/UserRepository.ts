@@ -1,7 +1,7 @@
 import { User } from "../models/User";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../config/dataSource";
-import { UserResponse } from "../types/UserResponse";
+import { UserResponse } from "../dtos/users/UserResponse";
 export class UserRepository {
     private repository: Repository<User>;
 

@@ -1,7 +1,7 @@
 import { Group } from "../models/Group";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../config/dataSource";
-import { GroupResponse } from "../types/GroupResponse";
+import { GroupResponse } from "../dtos/groups/GroupResponse";
 import { UpdateGroupDTO } from "../dtos/groups/UpdateGroupDTO";
 import { CreateGroupDTO } from "../dtos/groups/CreateGroupDTO";
 

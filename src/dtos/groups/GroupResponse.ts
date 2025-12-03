@@ -6,5 +6,4 @@ export interface GroupResponse {
     days: number[];
     createdAt: Date;
     updatedAt: Date;
-//    tasks: TaskResponse[];
 }

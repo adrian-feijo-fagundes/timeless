@@ -3,7 +3,7 @@ import { UpdateGroupDTO } from "../dtos/groups/UpdateGroupDTO"
 import { AppError, NotFoundError } from "../errors"
 import { Group } from "../models/Group"
 import { GroupRepository } from "../repositories/GroupRepository"
-import { GroupResponse } from "../types/GroupResponse"
+import { GroupResponse } from "../dtos/groups/GroupResponse"
 import { UserUtils } from "../utils/UserUtils"
 import { validateId } from "../utils/validateId"
 

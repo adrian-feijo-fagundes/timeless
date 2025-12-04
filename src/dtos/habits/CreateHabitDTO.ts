@@ -1,6 +1,4 @@
-import { Type } from "class-transformer"
-import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinDate, Validate } from "class-validator"
-import { DateNotBeforeToday } from "../../decorators/DateNotBeforeToday"
+import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinDate, Validate } from "class-validator"
 
 export class CreateHabitDTO {
     @IsNotEmpty({ message: "O título é obrigatório" })
@@ -12,24 +10,7 @@ export class CreateHabitDTO {
     @IsString()
     topic?: string = "Other";
 
-
-    @IsNotEmpty()
-    @IsString()
-    status?: string;
-
-    @IsOptional()
-    description?: string
-
-    @IsOptional()    
-    @Type(() => Date)
-    @IsDate({ message: "Data de vencimento da tarefa inválida" })
-    @Validate(DateNotBeforeToday, { message: "A data não pode ser no passado" })
-    limitDate?: Date
-
-
-
     @IsNumber()
     @IsNotEmpty({ message: "O id do grupo é obrigatório"})
     groupId!: number;
-
 }

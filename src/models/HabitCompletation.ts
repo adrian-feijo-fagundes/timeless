@@ -8,19 +8,19 @@ import { Habit } from "./Habit";
 @Unique(["habit", "completed_at"]) // evita duplicar o mesmo dia
 export class HabitCompletion {
 
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryGeneratedColumn()
     id!: string;
 
     @ManyToOne(() => Habit, habit => habit.completions, { onDelete: "CASCADE" })
     habit!: Habit;
 
     @Column({ type: "date" })
-    completed_at: string; // yyyy-mm-dd
+    completed_at: Date; // yyyy-mm-dd
 
     @CreateDateColumn()
     created_at!: Date;
 
-    constructor(habit: Habit, completed_at: string) {
+    constructor(habit: Habit, completed_at: Date) {
         this.habit = habit;
         this.completed_at = completed_at;
     }

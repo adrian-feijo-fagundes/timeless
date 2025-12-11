@@ -3,7 +3,7 @@ import { IsString, IsOptional, IsArray, ArrayNotEmpty, ArrayUnique, IsInt, Min, 
 export class CreateGroupDTO {
     @IsNotEmpty()
     @IsString({ message: "O nome do grupo deve ser uma string" })
-    name?: string;
+    title?: string;
 
     @IsOptional()
     @IsString({ message: "A descrição deve ser uma string" })

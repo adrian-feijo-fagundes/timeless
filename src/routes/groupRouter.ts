@@ -14,10 +14,10 @@ const groupRoutes = Router();
 groupRoutes.use(authMiddleware.authenticateToken);
 
 // Rotas CRUD
-groupRoutes.post('/group',validateDto(CreateGroupDTO), groupController.create);
-groupRoutes.get('/group', groupController.listByUser);
-groupRoutes.get('/group/:id', groupController.getById);
-groupRoutes.put('/group/:id',validateDto(UpdateGroupDTO), groupController.update);
-groupRoutes.delete('/group/:id', groupController.delete);
+groupRoutes.post('/groups',validateDto(CreateGroupDTO), groupController.create);
+groupRoutes.get('/groups', groupController.listByUser);
+groupRoutes.get('/groups/:id', groupController.getById);
+groupRoutes.put('/groups/:id',validateDto(UpdateGroupDTO), groupController.update);
+groupRoutes.delete('/groups/:id', groupController.delete);
 
 export default groupRoutes; 

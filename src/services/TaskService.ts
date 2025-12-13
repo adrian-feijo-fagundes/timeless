@@ -21,7 +21,7 @@ export class TaskService {
         if (!group) {
             throw new NotFoundError("Grupo não encontrado");
         }
-
+        data.topic = data.topic || "other"
         const task = await taskRepository.createTask({
             ...data,
             user: { id: userId } as any,

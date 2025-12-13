@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsString, IsOptional, IsDateString, IsBoolean, IsNumber, IsDate, Validate } from "class-validator";
+import { IsString, IsOptional, IsDateString, IsBoolean, IsNumber, IsDate, Validate, IsIn } from "class-validator";
 import { DateNotBeforeToday } from "../../decorators/DateNotBeforeToday";
 
 export class UpdateTaskDTO {
@@ -13,6 +13,7 @@ export class UpdateTaskDTO {
 
     @IsOptional()
     @IsString()
+    @IsIn(["pending", "done", "late"])
     status?: string;
 
     @IsOptional()    

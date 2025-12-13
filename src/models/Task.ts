@@ -11,13 +11,13 @@ export class Task{
     @Column()
     title: string;
 
-    @Column()
+    @Column({ default: "other" })
     topic: string;
 
-    @Column()
-    status: string;
-
-    @Column({ type: "datetime",nullable: true})
+    @Column({ default: "pending" })
+    status!: string;
+    
+    @Column({ type: "datetime", nullable: true })
     limitDate?: Date | null;
     
     @CreateDateColumn()
@@ -27,7 +27,7 @@ export class Task{
     @ManyToOne(() => User, user => user.tasks, { onDelete: "CASCADE"})
     user: User;
 
-    @ManyToOne(() => Group, group => group.tasks)
+    @ManyToOne(() => Group, group => group.tasks, { onDelete: "CASCADE" })
     group: Group;
 
     @OneToMany(() => TaskLog, tasksLog => tasksLog.task)
@@ -47,7 +47,6 @@ export class Task{
         group: Group,
         title: string,
         topic: string,
-        status: string,
         limitDate: Date,
         tasksLog: TaskLog[]
     ) {
@@ -55,7 +54,6 @@ export class Task{
         this.group = group
         this.title = title
         this.topic = topic || "Other"
-        this.status = status
         this.limitDate = limitDate
         this.tasksLog = tasksLog
     }

@@ -13,10 +13,6 @@ export class CreateTaskDTO {
     topic?: string = "Other";
 
 
-    @IsNotEmpty()
-    @IsString()
-    status?: string;
-
     @IsOptional()
     description?: string
 

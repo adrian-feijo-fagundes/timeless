@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { Habit } from "../models/Habit";
 import { AppDataSource } from "../config/dataSource";
-import { HabitCompletion } from "../models/HabitCompletation";
+import { HabitCompletion } from "../models/HabitCompletion";
 
 export class HabitRepository {
     private repo: Repository<Habit>;

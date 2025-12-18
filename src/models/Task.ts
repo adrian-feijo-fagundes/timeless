@@ -17,7 +17,7 @@ export class Task{
     @Column({ default: "pending" })
     status!: string;
     
-    @Column({ type: "datetime", nullable: true })
+    @Column({ type: "timestamp", nullable: true })
     limitDate?: Date | null;
     
     @CreateDateColumn()
@@ -36,7 +36,7 @@ export class Task{
     @UpdateDateColumn()
     updatedAt!: Date;
     
-    @Column({ type: "datetime",nullable: true})
+    @Column({ type: "timestamp", nullable: true})
     completedAt?: Date;
 
     @Column({ type: "boolean", default: false })

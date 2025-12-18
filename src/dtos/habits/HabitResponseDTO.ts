@@ -1,5 +1,5 @@
 import { Habit } from "../../models/Habit";
-import { HabitCompletion } from "../../models/HabitCompletation";
+import { HabitCompletion } from "../../models/HabitCompletion";
 
 export class HabitResponseDTO {
     id!: number;

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 import { Group } from "./Group";
-import { HabitCompletion } from "./HabitCompletation";
+import { HabitCompletion } from "./HabitCompletion";
 
 @Entity("habits") 
 export class Habit{

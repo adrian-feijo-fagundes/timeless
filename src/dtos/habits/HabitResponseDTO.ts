@@ -46,8 +46,8 @@ export class HabitResponseDTO {
         };
 
         dto.completions = habit.completions?.map((c: HabitCompletion) => ({
-            id: c.id,
-            completed_at: c.completed_at // já é yyyy-mm-dd
+            id: c.id.toString(),
+            completed_at: c.completed_at
         })) || [];
 
         return dto;

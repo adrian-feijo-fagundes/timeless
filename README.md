@@ -20,29 +20,6 @@
 
 ## Rotas
 
-## 🚀 Deployment no Render (PostgreSQL)
-
-Para realizar o deploy no Render seguindo a migração para PostgreSQL:
-
-### 1. Banco de Dados
-1. No Render, crie um novo **PostgreSQL Database**.
-2. Copie a **Internal Database URL** ou **External Database URL**.
-
-### 2. Web Service
-1. Crie um novo **Web Service** conectado ao seu repositório.
-2. Configure o **Runtime** como `Node`.
-3. **Build Command**: `npm install && npm run build`
-4. **Start Command**: `npm start`
-5. Adicione as seguintes **Environment Variables**:
-   - `NODE_ENV`: `production`
-   - `DATABASE_URL`: (Cole a URL do seu banco de dados PostgreSQL do Render)
-   - `JWT_SECRET`: (Uma chave secreta para seus tokens)
-   - `CORS_ORIGIN`: (A URL do seu frontend, ex: `https://seu-app.onrender.com`)
-   - `PORT`: `10000` (O Render define isso automaticamente, mas é bom ter em mente)
-
-### 3. Sincronização do Banco
-A configuração atual está definida para usar `synchronize: true` apenas em desenvolvimento. Em produção, recomenda-se o uso de migrations ou garantir que o banco esteja sincronizado antes de desativar o synchronize no `dataSource.ts`.
-
 ## 🔑 **Auth Routes**
 
 ### 🔓 **Rotas Públicas**

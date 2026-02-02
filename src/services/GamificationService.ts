@@ -14,6 +14,35 @@ const LEVEL_UP_BONUS_XP = 50; // XP extra recebido ao subir de nível
 
 export class GamificationService {
 
+    // converte uma data (ou string "YYYY-MM-DD") em uma data local (00:00) 
+    private toLocalDateOnly(value: unknown): Date | null {
+        if (!value) return null;
+        if (value instanceof Date && !isNaN(value.getTime())) {
+            return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+        }
+        if (typeof value === "string") {
+            const m = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (m) {
+                const y = Number(m[1]);
+                const mo = Number(m[2]);
+                const d = Number(m[3]);
+                return new Date(y, mo - 1, d);
+            }
+            const parsed = new Date(value);
+            if (!isNaN(parsed.getTime())) {
+                return new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+            }
+        }
+        return null;
+    }
+
+    private localDateKey(date: Date): string {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+    }
+
     // busca a gamificação do usuário ou cria uma nova se não existir
     async getOrCreateGamification(userId: number): Promise<Gamification> {
         let gamification = await gamificationRepository.findByUserId(userId);
@@ -73,21 +102,25 @@ export class GamificationService {
     async updateTaskStreak(userId: number): Promise<{ streak: number; isNewRecord: boolean }> {
         const gamification = await this.getOrCreateGamification(userId);
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
         const previousStreak = gamification.taskStreak;
-        const lastCompleted = gamification.lastTaskCompletedAt 
-            ? new Date(gamification.lastTaskCompletedAt)
-            : null;
+        const lastCompleted = this.toLocalDateOnly((gamification as any).lastTaskCompletedAt);
 
         if (lastCompleted) {
-            lastCompleted.setHours(0, 0, 0, 0);
-            const diffDays = Math.floor((today.getTime() - lastCompleted.getTime()) / (1000 * 60 * 60 * 24));
+            const todayKey = this.localDateKey(todayLocal);
+            const lastKey = this.localDateKey(lastCompleted);
 
-            if (diffDays === 0) {
+            if (lastKey === todayKey) {
                 // já completou hoje, mantém o streak atual
                 return { streak: gamification.taskStreak, isNewRecord: false };
-            } else if (diffDays === 1) {
+            }
+
+            const yesterday = new Date(todayLocal);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayKey = this.localDateKey(yesterday);
+
+            if (lastKey === yesterdayKey) {
                 // dia consecutivo, incrementa o streak
                 gamification.taskStreak += 1;
             } else {
@@ -101,7 +134,7 @@ export class GamificationService {
 
         // verifica se o novo streak é maior que o anterior (novo recorde)
         const isNewRecord = gamification.taskStreak > previousStreak;
-        gamification.lastTaskCompletedAt = today;
+        gamification.lastTaskCompletedAt = todayLocal;
 
         await gamificationRepository.save(gamification);
 
@@ -262,6 +295,19 @@ export class GamificationService {
     }> {
         const gamification = await this.getOrCreateGamification(userId);
         const achievements = await gamificationRepository.findAchievementsByUserId(userId);
+        
+        // se o usuário ficou pelo menos 1 dia inteiro sem completar tarefas,
+        // o streak exibido deve ser 0 (já "quebrou" a sequência).
+        const today = new Date();
+        const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const lastCompleted = this.toLocalDateOnly((gamification as any).lastTaskCompletedAt);
+        if (lastCompleted) {
+            const diffDays = Math.floor((todayLocal.getTime() - lastCompleted.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays > 1 && gamification.taskStreak !== 0) {
+                gamification.taskStreak = 0;
+                await gamificationRepository.save(gamification);
+            }
+        }
 
         return {
             xp: gamification.xp,
